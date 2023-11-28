@@ -57,7 +57,7 @@ max-complexity = 10
 
 # Ignore `E402` (import violations) and `F401` (unused imports) in all `__init__.py` files
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["E402", "F401"][tool.ruff.flake8-quotes]
+"__init__.py" = ["E402", "F401"]
 docstring-quotes = "double"
 
 [tool.setuptools.packages.find]
