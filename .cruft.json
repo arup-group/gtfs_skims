@@ -1,0 +1,28 @@
+{
+  "template": "https://github.com/arup-group/cookiecutter-pypackage",
+  "commit": "7f692039512f79d8fe485bf96a56f6cc2fc2e660",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "full_name": "Theodore-Chatziioannou",
+      "email": "Theodore.Chatziioannou@arup.com",
+      "github_username": "Theodore-Chatziioannou",
+      "repository_owner": "arup-group",
+      "project_title": "gtfs-skims",
+      "repository_name": "gtfs_skims",
+      "package_name": "gtfs_skims",
+      "module_name": "gtfs_skims",
+      "project_short_description": "A fast library for fast generalised cost skimming of GTFS files",
+      "index_package": "conda",
+      "conda_channel": "city-modelling-lab",
+      "version": "0.1.0",
+      "command_line_interface": "y",
+      "create_docker_file": "y",
+      "create_author_file": "n",
+      "create_jupyter_notebook_directory": "n",
+      "open_source_license": "MIT license",
+      "_template": "https://github.com/arup-group/cookiecutter-pypackage"
+    }
+  },
+  "directory": null
+}
