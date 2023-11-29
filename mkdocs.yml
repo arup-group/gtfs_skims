@@ -1,7 +1,8 @@
 site_name: gtfs-skims
 nav:
   - Home: index.md
-  - Installation: installation.md- Contributing: contributing.md
+  - Installation: installation.md
+  - Contributing: contributing.md
   - Changelog: CHANGELOG.md
   - Reference:
     - Command line interface: api/cli.md
