@@ -42,14 +42,20 @@ All together:
 
 --8<-- "README.md:docs-install-dev"
 
-If installing directly with pip, you can install these libraries using the `dev` option, i.e., `pip install -e '.[dev]'`If you plan to make changes to the code then please make regular use of the following tools to verify the codebase while you work:
+If installing directly with pip, you can install these libraries using the `dev` option, i.e., `pip install -e '.[dev]'`
+
+If you plan to make changes to the code then please make regular use of the following tools to verify the codebase while you work:
 
 - `pre-commit`: run `pre-commit install` in your command line to load inbuilt checks that will run every time you commit your changes.
 The checks are: 1. check no large files have been staged, 2. lint python files for major errors, 3. format python files to conform with the [PEP8 standard](https://peps.python.org/pep-0008/).
 You can also run these checks yourself at any time to ensure staged changes are clean by calling `pre-commit`.
-- `pytest` - run the unit test suite and check test coverage.### Rapid-fire testing
-The following options allow you to strip down the test suite to the bare essentials:2. You can avoid generating coverage reports, by adding the `--no-cov` argument: `pytest --no-cov`.
-3. By default, the tests run with up to two parallel threads, to increase this to e.g. 4 threads: `pytest -n4`.
+- `pytest` - run the unit test suite and check test coverage.
+
+### Rapid-fire testing
+
+The following options allow you to strip down the test suite to the bare essentials:
+1. You can avoid generating coverage reports, by adding the `--no-cov` argument: `pytest --no-cov`.
+1. By default, the tests run with up to two parallel threads, to increase this to e.g. 4 threads: `pytest -n4`.
 
 All together:
 

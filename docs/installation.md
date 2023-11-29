@@ -14,7 +14,9 @@ As a `gtfs_skims` user, it is easiest to install using the [mamba](https://mamba
 
 All together:
 
---8<-- "README.md:docs-install-user"## Setting up a development environment
+--8<-- "README.md:docs-install-user"
+
+## Setting up a development environment
 
 The install instructions are slightly different to create a development environment compared to a user environment:
 
