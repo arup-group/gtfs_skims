@@ -18,5 +18,4 @@ jobs:
     with:
       os: ubuntu-latest
       py3version: "11"
-      notebook_kernel: gtfs_skims
       lint: false

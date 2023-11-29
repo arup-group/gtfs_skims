@@ -17,7 +17,6 @@ jobs:
     with:
       os: ubuntu-latest
       py3version: "11"
-      notebook_kernel: gtfs_skims
       pytest_args: '--no-cov'  # ignore coverage
       cache_mamba_env: false
       lint: false

@@ -13,7 +13,6 @@ jobs:
     uses: arup-group/actions-city-modelling-lab/.github/workflows/docs-deploy.yml@main
     with:
       deploy_type: test
-      notebook_kernel: gtfs_skims
 
   docs-update-latest:
     permissions:
@@ -22,4 +21,3 @@ jobs:
     uses: arup-group/actions-city-modelling-lab/.github/workflows/docs-deploy.yml@main
     with:
       deploy_type: update_latest
-      notebook_kernel: gtfs_skims
