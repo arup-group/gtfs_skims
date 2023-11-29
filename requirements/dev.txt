@@ -1,5 +1,6 @@
 mike < 2
 mkdocs < 2
+mkdocs-material >= 9.4, < 10
 mkdocs-click < 0.7
 mkdocstrings-python < 2
 pre-commit < 4
