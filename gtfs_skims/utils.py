@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+from datetime import datetime
 import logging
 import os
 from pathlib import Path
@@ -21,6 +22,20 @@ def ts_to_sec(x: str) -> int:
     """
     s = [int(i) for i in x.split(':')]
     return 3600*s[0]+60*s[1]+s[2]
+
+
+def get_weekday(date: int) -> str:
+    """Get the weekday of a date
+
+    Args:
+        date (int): Date as yyyymmdd
+
+    Returns:
+        str: Day name
+    """
+    weekday = datetime.strptime(str(date), '%Y%m%d')
+    weekday = datetime.strftime(weekday, '%A').lower()
+    return weekday
 
 
 def get_logger(path_output: Optional[str] = None) -> logging.Logger:

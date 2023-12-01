@@ -15,6 +15,10 @@ def test_get_logger(tmpdir):
     logger.info('test')
 
 
+def test_weekday():
+    assert utils.get_weekday(20231201) == 'friday'
+
+
 def test_load_config(config):
     'path_gtfs' in config.__dict__
 
