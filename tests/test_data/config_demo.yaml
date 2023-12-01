@@ -1,8 +1,8 @@
 paths:
-  path_gtfs: /mnt/efs/otp/gtfs_transfers/iow-bus-gtfs.zip
+  path_gtfs: ./iow-bus-gtfs.zip
   path_outputs: /mnt/efs/otp/gtfs_transfers/skims_iow
-  path_zone_centroids: /mnt/efs/zones/msoa_centroids.geojson # path to zone centroids to skim
-
+  path_origins: ./centroids.csv # path to the origin points
+  path_destinations: ./centroids.csv # path to the destination points
 
 settings:
   calendar_date : 20190515 # yyyymmdd | Date for filtering the GTFS file.
@@ -20,11 +20,3 @@ steps:
   - preprocessing
   - connectors
   - graph
-
-# Settings for AWS batch (Optional)
-aws_job_definition:
-  image: "815306348607.dkr.ecr.eu-west-1.amazonaws.com/ukpop:latest"
-  memory: 32000
-  vcpus: 4
-  job_definition_name: "gtfs-ukpop11"
-  job_queue: "general_purpose_queue"
