@@ -1,8 +1,8 @@
 paths:
-  path_gtfs: ./iow-bus-gtfs.zip
-  path_outputs: /mnt/efs/otp/gtfs_transfers/skims_iow
-  path_origins: ./centroids.csv # path to the origin points
-  path_destinations: ./centroids.csv # path to the destination points
+  path_gtfs: ./tests/test_data/iow-bus-gtfs.zip
+  path_outputs: ./tests/test_data/outputs
+  path_origins: ./tests/test_data/centroids.csv # path to the origin points
+  path_destinations: ./tests/test_data/centroids.csv # path to the destination points
 
 settings:
   calendar_date : 20190515 # yyyymmdd | Date for filtering the GTFS file.
