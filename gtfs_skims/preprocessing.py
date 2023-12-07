@@ -79,15 +79,16 @@ def filter_time(data: GTFSData, start_time: int, end_time: int) -> None:
     )]
 
 
-def add_coordinates(data: GTFSData) -> None:
+def add_coordinates(data: GTFSData, epsg: int = 27700) -> None:
     """Add BNG coordinates to the stop and stoptime tables.
 
     Args:
         data (Data): Data object.
+        epsg (int): The target coordinate system
     """
     transformer = pyproj.Transformer.from_crs(
         pyproj.transformer.CRS('epsg:4326'),
-        pyproj.transformer.CRS('epsg:27700'), always_xy=True)
+        pyproj.transformer.CRS(f'epsg:{epsg}'), always_xy=True)
 
     data.stops['x'], data.stops['y'] = transformer.transform(
         data.stops['stop_lon'], data.stops['stop_lat']
@@ -139,22 +140,25 @@ def filter_bounding_box(data: GTFSData, xmin: int, xmax: int, ymin: int, ymax: i
     )]
 
 
-def main(path_config: str) -> None:
-    """Run the preprocessing pipeline
+def main(config: Config) -> GTFSData:
+    """Run the preprocessing pipeline and save resulting tables to disk.
 
     Args:
-        path_config (str): Path to the config file.
+        config (Config): Path Config object.
+
+    Returns:
+        GTFSData: Pre-processed GTFS data object.
     """
-    config = Config.from_yaml(path_config)
     logger = get_logger(os.path.join(
         config.path_outputs, 'log_preprocessing.log'))
+
     logger.info('Reading files...')
     data = GTFSData.from_gtfs(path_gtfs=config.path_gtfs)
 
     logger.info('Time filtering..')
     filter_day(data, config.calendar_date)
     filter_time(data, config.start_s, config.end_s)
-    add_coordinates(data)
+    add_coordinates(data, epsg=config.epsg_centroids)
 
     if config.bounding_box is not None:
         logger.info('Cropping to bounding box..')
@@ -164,3 +168,5 @@ def main(path_config: str) -> None:
     data.save(config.path_outputs)
 
     logger.info(f'Preprocessing complete.')
+
+    return data

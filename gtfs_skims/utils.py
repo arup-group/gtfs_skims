@@ -94,6 +94,8 @@ class Config:
         k : 500 # max nearest neighbours when calculating distances
         max_wait : 1800  # sec | Max wait time at a stop
         bounding_box : null
+        epsg_centroids: 27700 # coordinate system of the centroids file. Needs to be Cartesian and in meters.
+
 
     steps:
     - preprocessing
@@ -112,6 +114,7 @@ class Config:
     k: int
     end_s: int
     bounding_box: dict
+    epsg_centroids: int
     max_wait: int
     start_s: int
     walk_distance_threshold: int

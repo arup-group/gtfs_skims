@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import pytest
 
 from gtfs_skims import preprocessing
 
@@ -47,6 +48,12 @@ def test_within_bounding_box(gtfs_data):
     assert gtfs_data.stops['y'].min() > ymin
     assert gtfs_data.stops['y'].max() < ymax
 
-def test_run_preprocessing():
-    path_config = os.path.join(Path(__file__).parent, 'test_data', 'config_demo.yaml')
-    preprocessing.main(path_config)
+
+def test_run_preprocessing_demo(config, tmpdir):
+    path_outputs = os.path.join(tmpdir, 'outputs')
+    config.path_outputs = path_outputs
+    preprocessing.main(config)
+    for x in ['calendar', 'routes', 'stops', 'stop_times', 'trips']:
+        assert os.path.exists(
+            os.path.join(path_outputs, f'{x}.parquet.gzip')
+        )
