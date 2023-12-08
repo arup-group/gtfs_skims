@@ -34,7 +34,6 @@ def test_query_all_valid_included(points, source):
     source_idx = find_index(points, *source)
     maxdist = 10
     radius = maxdist * (2**0.5)
-    # ods = connectors.query_pairs(points, radius)
     ods = connectors.query_pairs_filter(points, radius)
     is_valid = get_valid_points(points, source_idx, maxdist)
 
@@ -47,8 +46,8 @@ def test_query_all_included_valid(points, source):
     """ All results from the query are valid """
     source_idx = find_index(points, *source)
     maxdist = 10
-    radius = maxdist * (2**0.5)
-    ods = connectors.query_pairs_filter(points, radius)
+    
+    ods = connectors.query_pairs_filter(points, maxdist)
     is_valid = get_valid_points(points, source_idx, maxdist)
 
     ds = ods[ods[:, 0] == source_idx, 1]

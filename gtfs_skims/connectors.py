@@ -6,27 +6,33 @@ from scipy.spatial import KDTree
 from gtfs_skims.utils import Config, GTFSData, get_logger
 
 
-def query_pairs(coords: np.array, maxdist: float) -> np.array:
+def query_pairs(coords: np.array, radius: float) -> np.array:
     ids = coords[:, 2].argsort()
 
     dtree = KDTree(coords[ids])
-    connectors = dtree.query_pairs(r=maxdist, output_type='ndarray', p=2)
+    connectors = dtree.query_pairs(r=radius, output_type='ndarray', p=2)
 
     return ids[connectors]
 
 
 def query_pairs_filter(coords: np.array, maxdist: float) -> np.array:
-    ods = query_pairs(coords, maxdist)
-    coords_o = coords[ods[:, 0]]
-    coords_d = coords[ods[:, 1]]
+    radius = maxdist * (2**0.5)
+    connectors = query_pairs(coords, radius)
+    coords_o = coords[connectors[:, 0]]
+    coords_d = coords[connectors[:, 1]]
 
     dcoords = coords_d - coords_o
     walk = (dcoords[:, :2]**2).sum(1)**0.5  # euclidean distance on xy
     wait = dcoords[:, 2] - walk
 
-    cond = (wait > 0) & ((walk+wait) <= maxdist)
+    is_feasible = (wait > 0) & ((walk+wait) <= maxdist)
+    connectors = connectors[is_feasible]
 
-    return ods[cond]
+    return connectors
+
+
+def get_transfer_connectors(data: GTFSData, config: Config):
+    pass
 
 
 def get_access_connectors(data: GTFSData, config: Config):
