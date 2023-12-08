@@ -1,3 +1,4 @@
+from collections import defaultdict
 import itertools
 
 import numpy as np
@@ -11,6 +12,11 @@ def points():
     p = np.arange(-20, 20, 2.5)
     coords = np.array([(x, y, z) for x, y, z in itertools.product(p, p, p)])
     return coords
+
+
+@pytest.fixture()
+def transfer_connectors(points):
+    return connectors.TransferConnectors(points, 10)
 
 
 def find_index(coords, x, y, z):
@@ -33,12 +39,13 @@ def test_query_all_valid_included(points, source):
     """ All valid points are included in the query results """
     source_idx = find_index(points, *source)
     maxdist = 10
-    radius = maxdist * (2**0.5)
-    ods = connectors.query_pairs(points, radius)
     is_valid = get_valid_points(points, source_idx, maxdist)
 
-    ds = ods[ods[:, 0] == source_idx, 1]
-    assert is_valid[ds].sum() == is_valid.sum()
+    radius = maxdist * (2**0.5)
+    ods = connectors.query_pairs(points, radius)
+
+    dest = ods[ods[:, 0] == source_idx, 1]
+    assert is_valid[dest].sum() == is_valid.sum()
 
 
 @pytest.mark.parametrize('source', [(0, 0, 0), (2.5, 2.5, 2.5), (-2.5, 0, 2.5)])
@@ -46,16 +53,70 @@ def test_query_all_included_valid(points, source):
     """ All results from the query are valid """
     source_idx = find_index(points, *source)
     maxdist = 10
-    radius = maxdist * (2**0.5)
-
-    ods = connectors.query_pairs(points, radius)
-    tc = connectors.TransferConnector(points, ods).\
-        filter_feasible_transfer(maxdist)
-    ods_filtered = tc.ods
-
     is_valid = get_valid_points(points, source_idx, maxdist)
 
-    ds = ods_filtered[ods_filtered[:, 0] == source_idx, 1]
+    tc = connectors.TransferConnectors(points, maxdist)
+    tc.filter_feasible_transfer(maxdist)
+    dest = tc.ods[tc.ods[:, 0] == source_idx, 1]
 
-    assert is_valid[ds].sum() == is_valid.sum()
-    assert len(is_valid[ds]) > 0 and all(is_valid[ds])
+    assert is_valid[dest].sum() == is_valid.sum()
+    assert len(is_valid[dest]) > 0 and all(is_valid[dest])
+
+
+def test_filter_transfer_walk(transfer_connectors):
+    max_walk = 5
+    assert transfer_connectors.walk.max() > max_walk
+    transfer_connectors.filter_max_walk(max_walk)
+    assert transfer_connectors.walk.max() <= max_walk
+
+
+def test_filter_transfer_wait(transfer_connectors):
+    max_wait = 5
+    assert transfer_connectors.wait.max() > max_wait
+    transfer_connectors.filter_max_wait(max_wait)
+    assert transfer_connectors.wait.max() <= max_wait
+
+
+def test_filter_same_route(transfer_connectors):
+    # assume all even-to-even point ID are in the same route
+    routes = np.arange(len(transfer_connectors.coords))
+    routes = np.where(routes % 2, -1, routes)
+    transfer_connectors.filter_same_route(routes)
+    assert (transfer_connectors.ods % 2).prod(1).sum() == 0
+
+
+def get_o_service_transfers(conn, services_d):
+    transfer_times = conn.wait + conn.walk
+    d = defaultdict(list)
+    for i in range(len(services_d)):
+        d[(conn.ods[i, 0], services_d[i])
+          ].append(transfer_times[i])
+    return d
+
+
+def test_filter_nearest_service(transfer_connectors):
+    np.random.seed(0)
+    services = np.random.randint(
+        0, 2, size=transfer_connectors.coords.shape[0])
+    services_d = services[transfer_connectors.ods[:, 1]]
+
+    # for every origin-service pair there are multiple connections
+    transfer_times = transfer_connectors.wait + transfer_connectors.walk
+    d_before = get_o_service_transfers(transfer_connectors, services_d)
+
+    assert max(map(len, d_before.values())) > 0
+
+    # after filtering, there is only one and it is the
+    # one with the minumum transfer time.
+    transfer_connectors.filter_nearest_service(services)
+    services_d = services[transfer_connectors.ods[:, 1]]
+
+    d_after = get_o_service_transfers(transfer_connectors, services_d)
+
+    # didn't lose any origin-service pairs
+    assert len(d_before) == len(d_after)
+    # single connection per origin-service
+    assert max(map(len, d_after.values())) == 1
+
+    for o, service in d_before.keys():
+        d_after[(o, service)][0] == min(d_before[(o, service)])
