@@ -1,10 +1,11 @@
 from collections import defaultdict
 import itertools
+import os
 
 import numpy as np
 import pytest
 
-from gtfs_skims import connectors
+from gtfs_skims import connectors, preprocessing
 
 
 @pytest.fixture()
@@ -101,7 +102,6 @@ def test_filter_nearest_service(transfer_connectors):
     services_d = services[transfer_connectors.ods[:, 1]]
 
     # for every origin-service pair there are multiple connections
-    transfer_times = transfer_connectors.wait + transfer_connectors.walk
     d_before = get_o_service_transfers(transfer_connectors, services_d)
 
     assert max(map(len, d_before.values())) > 0
@@ -120,3 +120,12 @@ def test_filter_nearest_service(transfer_connectors):
 
     for o, service in d_before.keys():
         d_after[(o, service)][0] == min(d_before[(o, service)])
+
+
+def test_get_transfer_array(config, tmpdir):
+    path_outputs = os.path.join(tmpdir, 'outputs')
+    config.path_outputs = path_outputs
+    gtfs_data = preprocessing.main(config)
+    arr = connectors.get_transfer_connectors(gtfs_data, config)
+    assert len(arr) > 0
+    assert isinstance(arr, np.ndarray)

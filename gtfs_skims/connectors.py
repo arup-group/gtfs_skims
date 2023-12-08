@@ -10,7 +10,7 @@ from scipy.spatial import KDTree
 from gtfs_skims.utils import Config, GTFSData, get_logger
 
 
-def query_pairs(coords: np.array, radius: float) -> np.array:
+def query_pairs(coords: np.ndarray, radius: float) -> np.array:
     """Get origin-destination pairs between points, within a radius.
         The connections are forward-looking in z: ie the destination point
             has always greater z coordinate than the origin point.
@@ -33,7 +33,7 @@ def query_pairs(coords: np.array, radius: float) -> np.array:
 class TransferConnectors:
     """ Manages transfer connectors. """
 
-    def __init__(self, coords: np.array, max_tranfer_distance: float) -> None:
+    def __init__(self, coords: np.ndarray, max_tranfer_distance: float) -> None:
         self.coords = coords
         radius = max_tranfer_distance * (2**0.5)
         self.ods = query_pairs(coords, radius=radius)
@@ -77,7 +77,7 @@ class TransferConnectors:
         wait = self.dcoords[:, 2] - self.ocoords[:, 2] - self.walk
         return wait
 
-    def filter(self, cond: np.array[bool]) -> None:
+    def filter(self, cond: np.ndarray[bool]) -> None:
         """Filter (in-place) Connnectors' origin-destination data based on a set of conditions.
 
         Args:
@@ -124,7 +124,7 @@ class TransferConnectors:
         """
         self.filter(self.wait <= max_wait)
 
-    def filter_same_route(self, routes: np.array) -> None:
+    def filter_same_route(self, routes: np.ndarray) -> None:
         """Remove connections between services of the same route.
 
         Args:
@@ -134,7 +134,7 @@ class TransferConnectors:
             routes[self.ods[:, 0]] != routes[self.ods[:, 1]]
         )
 
-    def filter_nearest_service(self, services: np.array) -> None:
+    def filter_nearest_service(self, services: np.ndarray) -> None:
         """If a service can be accessed from a origin through multiple stops,
             then only keep the most efficient transfer for that connection.
 
@@ -165,34 +165,39 @@ def get_transfer_connectors(data: GTFSData, config: Config) -> np.array:
     max_wait_distance = config.max_wait * time_to_distance
 
     # get candidate connectors
-    coords = data.stop_times[['x', 'y', 'departure_s']]
+    coords = data.stop_times[['x', 'y', 'departure_s']].values
     tc = TransferConnectors(coords, max_tranfer_distance)
 
     # apply narrower filters
+    # enough time to make transfer
     tc.filter_feasible_transfer(max_tranfer_distance)
 
+    # maximum walk
     if config.walk_distance_threshold < max_tranfer_distance:
-        tc.filter_max_walk()
+        tc.filter_max_walk(config.walk_distance_threshold)
 
+    # maximum wait
     if max_wait_distance < max_tranfer_distance:
-        tc.filter_max_wait()
+        tc.filter_max_wait(max_wait_distance)
 
+    # not same route
     routes = data.stop_times['trip_id'].map(
         data.trips.set_index('trip_id')['route_id']
-    )
+    ).values
     tc.filter_same_route(routes)
 
+    # most efficient transfer to service
     services = data.stop_times['trip_id'].map(
         data.trips.set_index('trip_id')['service_id']
-    )
+    ).values
     tc.filter_nearest_service(services)
 
-    arr = np.array([
-        tc.ods[:, 0],  # origin index
-        tc.ods[:, 1],  # destination index
-        tc.walk,  # walk distance (meters)
-        tc.wait/time_to_distance*3600  # wait time (seconds???)
-    ])
+    # construct array
+    arr = np.concatenate([
+        tc.ods,  # origin and destination index
+        (tc.walk/time_to_distance).reshape(-1, 1),  # walk time (seconds)
+        (tc.wait/time_to_distance).reshape(-1, 1)  # wait time (seconds)
+    ], axis=1).round(1).astype(np.uint32)
     return arr
 
 
