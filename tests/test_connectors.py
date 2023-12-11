@@ -147,7 +147,7 @@ def test_get_od_walk():
     egress = connectors.AccessEgressConnectors(
         np.array([[0, 0], [1, 1]]),
         np.array([[0.5, 0.5], [2, 1], [2, 2]]),
-        max_tranfer_distance=1
+        max_transfer_distance=1
     )
     walk = egress.walk
     expected = np.array([
@@ -157,24 +157,40 @@ def test_get_od_walk():
 
 
 def test_convert_distance_3d():
-    egress = connectors.AccessEgressConnectors(
+    access = connectors.AccessEgressConnectors(
         np.array([[0, 0, 0]]),
         np.array([[1, 1, 1]]),
-        max_tranfer_distance=1
+        max_transfer_distance=1
     )
-    assert len(egress.ods) == 1  # radius has been adjusted to 3D space
+    assert len(access.ods) == 1  # radius has been adjusted to 3D space
 
 
-def test_apply_crow_fly_factoring():
-    pass
+def test_apply_crow_fly_factoring(gtfs_data_preprocessed, config):
+    arr = connectors.get_transfer_connectors(gtfs_data_preprocessed, config)
+    assert len(arr) == 2
+    max_walk = arr[:, 3].max()
+
+    config.walk_distance_threshold = max_walk
+    config.crows_fly_factor = 1
+    arr = connectors.get_transfer_connectors(gtfs_data_preprocessed, config)
+    assert len(arr) == 2
+
+    # after adding the crow's fly factor, the destination is further than the max distance
+    config.crows_fly_factor = 1.05
+    arr = connectors.get_transfer_connectors(gtfs_data_preprocessed, config)
+    assert len(arr) < 2
 
 
-def test_access_indices_are_offset():
-    pass
-
-
-def test_egress_indices_are_offset():
-    pass
+def test_indices_are_offset(config, gtfs_data_preprocessed, tmpdir):
+    config.path_outputs = tmpdir
+    transfer_connectors, access_connectors, egress_connectors = \
+        connectors.main(config=config, data=gtfs_data_preprocessed)
+    stop_time_ids = list(range(len(gtfs_data_preprocessed.stop_times)))
+    assert all(np.isin(access_connectors['dnode'], stop_time_ids))
+    assert all(np.isin(egress_connectors['onode'], stop_time_ids))
+    assert np.isin(access_connectors['onode'], stop_time_ids).sum() == 0
+    assert np.isin(egress_connectors['dnode'], stop_time_ids).sum() == 0
+    assert access_connectors['onode'].max() < egress_connectors['dnode'].min()
 
 
 def test_main_saves_outputs(config, gtfs_data_preprocessed, tmpdir):

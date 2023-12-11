@@ -35,9 +35,9 @@ def query_pairs(coords: np.ndarray, radius: float) -> np.array:
 class TransferConnectors:
     """ Manages transfer connectors. """
 
-    def __init__(self, coords: np.ndarray, max_tranfer_distance: float) -> None:
+    def __init__(self, coords: np.ndarray, max_transfer_distance: float) -> None:
         self.coords = coords
-        radius = max_tranfer_distance * (2**0.5)
+        radius = max_transfer_distance * (2**0.5)
         self.ods = query_pairs(coords, radius=radius)
 
     @cached_property
@@ -198,14 +198,14 @@ class AccessEgressConnectors(TransferConnectors):
             self,
             coords_origins: np.ndarray,
             coords_destinations: np.ndarray,
-            max_tranfer_distance: float
+            max_transfer_distance: float
     ) -> None:
         self.coords_origins = coords_origins
         self.coords_destinations = coords_destinations
 
-        radius = max_tranfer_distance
+        radius = max_transfer_distance
         if coords_origins.shape[1] == 3:
-            radius += max_tranfer_distance * (2**0.5)
+            radius += max_transfer_distance * (2**0.5)
 
         self.ods = query_pairs_od(coords_origins, coords_destinations,
                                   radius=radius)
@@ -231,23 +231,25 @@ class AccessEgressConnectors(TransferConnectors):
 
 def get_transfer_connectors(data: GTFSData, config: Config) -> np.array:
     time_to_distance = config.walk_speed/3.6  # km/hr to meters
-    max_tranfer_distance = config.max_transfer_time * time_to_distance
+    max_transfer_distance = config.max_transfer_time * time_to_distance
     max_wait_distance = config.max_wait * time_to_distance
 
     # get candidate connectors
     coords = data.stop_times[['x', 'y', 'departure_s']].values
-    tc = TransferConnectors(coords, max_tranfer_distance)
+    coords[:, :2] = coords[:, :2] * \
+        config.crows_fly_factor  # crow's fly transformation
+    tc = TransferConnectors(coords, max_transfer_distance)
 
     # apply more narrow filters:
     # enough time to make transfer
-    tc.filter_feasible_transfer(max_tranfer_distance)
+    tc.filter_feasible_transfer(max_transfer_distance)
 
     # maximum walk
-    if config.walk_distance_threshold < max_tranfer_distance:
+    if config.walk_distance_threshold < max_transfer_distance:
         tc.filter_max_walk(config.walk_distance_threshold)
 
     # maximum wait
-    if max_wait_distance < max_tranfer_distance:
+    if max_wait_distance < max_transfer_distance:
         tc.filter_max_wait(max_wait_distance)
 
     # not same route
@@ -272,21 +274,26 @@ def get_transfer_connectors(data: GTFSData, config: Config) -> np.array:
     return arr
 
 
-def get_access_connectors(data: GTFSData, config: Config, coords_origins: np.ndarray):
+def get_access_connectors(data: GTFSData, config: Config, origins: pd.DataFrame):
     time_to_distance = config.walk_speed/3.6  # km/hr to meters
-    max_tranfer_distance = config.max_transfer_time * time_to_distance
+    max_transfer_distance = config.max_transfer_time * time_to_distance
     max_wait_distance = config.max_wait * time_to_distance
 
     # get candidate connectors
     coords_stops = data.stop_times[['x', 'y', 'departure_s']].values
+    coords_stops[:, :2] = coords_stops[:, :2] * \
+        config.crows_fly_factor  # crow's fly transformation
+    coords_origins = (origins[['x', 'y']] * config.crows_fly_factor).\
+        assign(z=config.start_s).values
+
     ac = AccessEgressConnectors(
-        coords_origins, coords_stops, max_tranfer_distance)
+        coords_origins, coords_stops, max_transfer_distance)
 
     # more narrow filtering
-    ac.filter_feasible_transfer(max_tranfer_distance)
-    if config.walk_distance_threshold < max_tranfer_distance:
+    ac.filter_feasible_transfer(max_transfer_distance)
+    if config.walk_distance_threshold < max_transfer_distance:
         ac.filter_max_walk(config.walk_distance_threshold)
-    if max_wait_distance < max_tranfer_distance:
+    if max_wait_distance < max_transfer_distance:
         ac.filter_max_wait(max_wait_distance)
 
     arr = np.concatenate([
@@ -298,11 +305,16 @@ def get_access_connectors(data: GTFSData, config: Config, coords_origins: np.nda
     return arr
 
 
-def get_egress_connectors(data: GTFSData, config: Config, coords_destinations: np.ndarray):
+def get_egress_connectors(data: GTFSData, config: Config, destinations: pd.DataFrame):
     time_to_distance = config.walk_speed/3.6  # km/hr to meters
 
     # get candidate connectors
     coords_stops = data.stop_times[['x', 'y']].values
+    coords_stops[:, :2] = coords_stops[:, :2] * \
+        config.crows_fly_factor  # crow's fly transformation
+    coords_destinations = (
+        destinations[['x', 'y']] * config.crows_fly_factor).values
+
     ec = AccessEgressConnectors(
         coords_stops, coords_destinations, config.walk_distance_threshold)
 
@@ -321,18 +333,16 @@ def main(config: Config, data: Optional[GTFSData] = None) -> tuple[TransferConne
 
     if data is None:
         data = GTFSData.from_parquet(config.path_outputs)
-    coords_origins = pd.read_csv(config.path_origins, index_col=0)
-    coords_destinations = pd.read_csv(config.path_destinations, index_col=0)
+    origins = pd.read_csv(config.path_origins, index_col=0)
+    destinations = pd.read_csv(config.path_destinations, index_col=0)
 
     # get feasible connections
     logger.info('Getting transfer connectors...')
     transfer_connectors = get_transfer_connectors(data, config)
     logger.info('Getting access connectors...')
-    access_connectors = get_access_connectors(
-        data, config, coords_origins.assign(z=config.start_s).values)
+    access_connectors = get_access_connectors(data, config, origins)
     logger.info('Getting egress connectors...')
-    egress_connectors = get_egress_connectors(
-        data, config, coords_destinations.values)
+    egress_connectors = get_egress_connectors(data, config, destinations)
 
     # convert to dataframe
     colnames = ['onode', 'dnode', 'walk', 'wait']
@@ -342,7 +352,7 @@ def main(config: Config, data: Optional[GTFSData] = None) -> tuple[TransferConne
 
     # offset IDs for endpoints
     access_connectors['onode'] += len(data.stop_times)
-    egress_connectors['dnode'] += (len(data.stop_times)+len(coords_origins))
+    egress_connectors['dnode'] += (len(data.stop_times)+len(origins))
 
     # save
     logger.info(f'Saving connectors to f{config.path_outputs}...')
