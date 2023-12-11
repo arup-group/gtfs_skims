@@ -111,7 +111,6 @@ class Config:
     calendar_date: int
     crows_fly_factor: float
     max_transfer_time: int
-    k: int
     end_s: int
     bounding_box: dict
     epsg_centroids: int

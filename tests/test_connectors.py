@@ -4,6 +4,7 @@ import os
 
 import numpy as np
 import pytest
+import unittest.mock as mock
 
 from gtfs_skims import connectors, preprocessing
 
@@ -122,10 +123,43 @@ def test_filter_nearest_service(transfer_connectors):
         d_after[(o, service)][0] == min(d_before[(o, service)])
 
 
-def test_get_transfer_array(config, tmpdir):
-    path_outputs = os.path.join(tmpdir, 'outputs')
-    config.path_outputs = path_outputs
-    gtfs_data = preprocessing.main(config)
-    arr = connectors.get_transfer_connectors(gtfs_data, config)
+def test_get_transfer_array(gtfs_data_preprocessed, config):
+    arr = connectors.get_transfer_connectors(gtfs_data_preprocessed, config)
     assert len(arr) > 0
     assert isinstance(arr, np.ndarray)
+
+
+def test_get_od_pairs():
+    ods = connectors.query_pairs_od(
+        np.array([[0, 0], [1, 1]]),
+        np.array([[0.5, 0.5], [2, 1], [2, 2]]),
+        radius=1
+    )
+    expected = np.array([
+        [0, 0],
+        [1, 0],
+        [1, 1]
+    ])
+    np.testing.assert_equal(ods, expected)
+
+
+def test_get_od_walk():
+    egress = connectors.AccessEgressConnectors(
+        np.array([[0, 0], [1, 1]]),
+        np.array([[0.5, 0.5], [2, 1], [2, 2]]),
+        max_tranfer_distance=1
+    )
+    walk = egress.walk
+    expected = np.array([
+        (2*0.5**2)**0.5, (2*0.5**2)**0.5, 1
+    ])
+    np.testing.assert_almost_equal(walk, expected)
+
+
+def test_convert_distance_3d():
+    egress = connectors.AccessEgressConnectors(
+        np.array([[0, 0, 0]]),
+        np.array([[1, 1, 1]]),
+        max_tranfer_distance=1
+    )
+    assert len(egress.ods) == 1  # radius has been adjusted to 3D space

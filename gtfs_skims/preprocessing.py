@@ -144,7 +144,7 @@ def main(config: Config) -> GTFSData:
     """Run the preprocessing pipeline and save resulting tables to disk.
 
     Args:
-        config (Config): Path Config object.
+        config (Config): Config object.
 
     Returns:
         GTFSData: Pre-processed GTFS data object.

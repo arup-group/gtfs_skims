@@ -31,6 +31,12 @@ def response():
 def config():
     return Config.from_yaml(os.path.join(TEST_DATA_DIR, 'config_demo.yaml'))
 
+
 @pytest.fixture
 def gtfs_data():
     return GTFSData.from_gtfs(os.path.join(TEST_DATA_DIR, 'iow-bus-gtfs.zip'))
+
+
+@pytest.fixture
+def gtfs_data_preprocessed():
+    return GTFSData.from_parquet(os.path.join(TEST_DATA_DIR, 'outputs'))

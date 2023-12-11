@@ -1,3 +1,7 @@
+import numpy as np
+
+DATA_TYPE = np.uint32
+
 # route types lookup
 # source: https://developers.google.com/transit/gtfs/reference#routestxt
 # and https://developers.google.com/transit/gtfs/reference/extended-route-types
