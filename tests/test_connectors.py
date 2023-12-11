@@ -163,3 +163,24 @@ def test_convert_distance_3d():
         max_tranfer_distance=1
     )
     assert len(egress.ods) == 1  # radius has been adjusted to 3D space
+
+
+def test_apply_crow_fly_factoring():
+    pass
+
+
+def test_access_indices_are_offset():
+    pass
+
+
+def test_egress_indices_are_offset():
+    pass
+
+
+def test_main_saves_outputs(config, gtfs_data_preprocessed, tmpdir):
+    config.path_outputs = tmpdir
+    connectors.main(config=config, data=gtfs_data_preprocessed)
+    for x in ['transfer', 'access', 'egress']:
+        assert os.path.exists(
+            os.path.join(tmpdir, f'connectors_{x}.parquet.gzip')
+        )

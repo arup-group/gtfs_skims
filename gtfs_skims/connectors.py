@@ -315,20 +315,24 @@ def get_egress_connectors(data: GTFSData, config: Config, coords_destinations: n
     return arr
 
 
-def main(data: GTFSData, config: Config) -> tuple[TransferConnectors, AccessEgressConnectors, AccessEgressConnectors]:
+def main(config: Config, data: Optional[GTFSData] = None) -> tuple[TransferConnectors, AccessEgressConnectors, AccessEgressConnectors]:
     logger = get_logger(os.path.join(
         config.path_outputs, 'log_connectors.log'))
-    coords_origins = pd.read_csv(config.path_origins)
-    coords_destinations = pd.read_csv(config.path_destinations)
+
+    if data is None:
+        data = GTFSData.from_parquet(config.path_outputs)
+    coords_origins = pd.read_csv(config.path_origins, index_col=0)
+    coords_destinations = pd.read_csv(config.path_destinations, index_col=0)
 
     # get feasible connections
     logger.info('Getting transfer connectors...')
     transfer_connectors = get_transfer_connectors(data, config)
     logger.info('Getting access connectors...')
-    access_connectors = get_access_connectors(data, config, coords_origins)
+    access_connectors = get_access_connectors(
+        data, config, coords_origins.assign(z=config.start_s).values)
     logger.info('Getting egress connectors...')
     egress_connectors = get_egress_connectors(
-        data, config, coords_destinations)
+        data, config, coords_destinations.values)
 
     # convert to dataframe
     colnames = ['onode', 'dnode', 'walk', 'wait']
@@ -337,19 +341,22 @@ def main(data: GTFSData, config: Config) -> tuple[TransferConnectors, AccessEgre
     egress_connectors = pd.DataFrame(egress_connectors, columns=colnames)
 
     # offset IDs for endpoints
-    access_connectors['onode'] += (len(data.stop_times)+1)
-    egress_connectors['dnode'] += (len(data.stop_times)+len(coords_origins)+2)
+    access_connectors['onode'] += len(data.stop_times)
+    egress_connectors['dnode'] += (len(data.stop_times)+len(coords_origins))
 
     # save
     logger.info(f'Saving connectors to f{config.path_outputs}...')
     transfer_connectors.to_parquet(
-        os.path.join(config.path_outputs, 'connectors_transfer.parquet')
+        os.path.join(config.path_outputs, 'connectors_transfer.parquet.gzip'),
+        compression='gzip'
     )
     access_connectors.to_parquet(
-        os.path.join(config.path_outputs, 'connectors_access.parquet')
+        os.path.join(config.path_outputs, 'connectors_access.parquet.gzip'),
+        compression='gzip'
     )
     egress_connectors.to_parquet(
-        os.path.join(config.path_outputs, 'connectors_egress.parquet')
+        os.path.join(config.path_outputs, 'connectors_egress.parquet.gzip'),
+        compression='gzip'
     )
 
     return transfer_connectors, access_connectors, egress_connectors
