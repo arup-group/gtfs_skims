@@ -230,6 +230,15 @@ class AccessEgressConnectors(TransferConnectors):
 
 
 def get_transfer_connectors(data: GTFSData, config: Config) -> np.array:
+    """Get all transfer connectors (between stops).
+
+    Args:
+        data (GTFSData): GTFS data object.
+        config (Config): Config object.
+
+    Returns:
+        np.ndarray: [origin id, destination id, walk time, wait time]
+    """
     time_to_distance = config.walk_speed/3.6  # km/hr to meters
     max_transfer_distance = config.max_transfer_time * time_to_distance
     max_wait_distance = config.max_wait * time_to_distance
@@ -274,7 +283,18 @@ def get_transfer_connectors(data: GTFSData, config: Config) -> np.array:
     return arr
 
 
-def get_access_connectors(data: GTFSData, config: Config, origins: pd.DataFrame):
+def get_access_connectors(data: GTFSData, config: Config, origins: pd.DataFrame) -> np.ndarray:
+    """Get all access connectors (between origins and stops).
+
+    Args:
+        data (GTFSData): GTFS data object.
+        config (Config): Config object.
+        destinations (pd.DataFrame): Origin coordinates dataframe. 
+        Must include 'x' and 'y' columns, providing the cartesian coordinates of the trip start points.
+
+    Returns:
+        np.ndarray: [origin id, destination id, walk time, wait time]
+    """
     time_to_distance = config.walk_speed/3.6  # km/hr to meters
     max_transfer_distance = config.max_transfer_time * time_to_distance
     max_wait_distance = config.max_wait * time_to_distance
@@ -305,7 +325,18 @@ def get_access_connectors(data: GTFSData, config: Config, origins: pd.DataFrame)
     return arr
 
 
-def get_egress_connectors(data: GTFSData, config: Config, destinations: pd.DataFrame):
+def get_egress_connectors(data: GTFSData, config: Config, destinations: pd.DataFrame) -> np.ndarray:
+    """Get all egress connectors (between stops and destinations).
+
+    Args:
+        data (GTFSData): GTFS data object.
+        config (Config): Config object.
+        destinations (pd.DataFrame): Destination coordinates dataframe. 
+        Must include 'x' and 'y' columns, providing the cartesian coordinates of the trip ends.
+
+    Returns:
+        np.ndarray: [origin id, destination id, walk time, wait time]
+    """
     time_to_distance = config.walk_speed/3.6  # km/hr to meters
 
     # get candidate connectors
@@ -328,6 +359,17 @@ def get_egress_connectors(data: GTFSData, config: Config, destinations: pd.DataF
 
 
 def main(config: Config, data: Optional[GTFSData] = None) -> ConnectorsData:
+    """Get feasible connections (transfers, access, egress).
+
+    Args:
+        config (Config): Config object.
+        data (Optional[GTFSData], optional): GTFS data object. 
+            If not provided, reads the stored parquet files from the outputs directory. 
+            Defaults to None.
+
+    Returns:
+        ConnectorsData: Connectors object, holding the three output tables.
+    """
     logger = get_logger(os.path.join(
         config.path_outputs, 'log_connectors.log'))
 

@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from gtfs_skims.utils import Config, GTFSData
+from gtfs_skims.utils import Config, GTFSData, ConnectorsData
 
 TEST_DATA_DIR = os.path.join(Path(__file__).parent, 'test_data')
 
@@ -40,3 +40,8 @@ def gtfs_data():
 @pytest.fixture
 def gtfs_data_preprocessed():
     return GTFSData.from_parquet(os.path.join(TEST_DATA_DIR, 'outputs'))
+
+
+@pytest.fixture
+def connectors_data():
+    return ConnectorsData.from_parquet(os.path.join(TEST_DATA_DIR, 'outputs'))
