@@ -4,7 +4,7 @@ from datetime import datetime
 import logging
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Self
 import yaml
 from zipfile import ZipFile
 
@@ -118,6 +118,9 @@ class Config:
     start_s: int
     walk_distance_threshold: int
     walk_speed: float
+    weight_walk: float
+    weight_wait: float
+    penalty_interchange: float
     steps: list
 
     @classmethod
@@ -146,16 +149,65 @@ class Config:
         return s
 
 
-@dataclass
-class GTFSData:
-    calendar: pd.DataFrame
-    routes: pd.DataFrame
-    stops: pd.DataFrame
-    stop_times: pd.DataFrame
-    trips: pd.DataFrame
+# @dataclass
+# class GTFSData:
+#     calendar: pd.DataFrame
+#     routes: pd.DataFrame
+#     stops: pd.DataFrame
+#     stop_times: pd.DataFrame
+#     trips: pd.DataFrame
 
+#     @classmethod
+#     def from_gtfs(cls, path_gtfs: str) -> GTFSData:
+#         """Load GTFS tables from a standard zipped GTFS file.
+
+#         Args:
+#             path_gtfs (str): Path to a zipped GTFS dataset.
+
+#         Returns:
+#             GTFSData: GTFS data object.
+#         """
+#         data = {}
+#         with ZipFile(path_gtfs, 'r') as zf:
+#             for name in ['calendar', 'routes', 'stops', 'stop_times', 'trips']:
+#                 with zf.open(f'{name}.txt') as f:
+#                     data[name] = pd.read_csv(f, low_memory=False)
+#         return cls(**data)
+
+#     @classmethod
+#     def from_parquet(cls, path: str) -> GTFSData:
+#         """Construct class from pre-processed GTFS tables in Parquet format.
+
+#         Args:
+#             path (str): Path to tables.
+
+#         Returns:
+#             GTFSData: GTFS data object.
+#         """
+#         data = {}
+#         for name in ['calendar', 'routes', 'stops', 'stop_times', 'trips']:
+#             data[name] = pd.read_parquet(
+#                 os.path.join(path, f'{name}.parquet.gzip'))
+#         return cls(**data)
+
+#     def save(self, path_outputs: str) -> None:
+#         """Export all tables in zipped parquet format.
+
+#         Args:
+#             path_outputs (str): Directory to save outputs.
+#         """
+#         if not os.path.exists(path_outputs):
+#             os.makedirs(path_outputs)
+
+#         for k, v in self.__dict__.items():
+#             v.to_parquet(os.path.join(
+#                 path_outputs, f'{k}.parquet.gzip'), compression='gzip')
+
+
+@dataclass
+class Data:
     @classmethod
-    def from_gtfs(cls, path_gtfs: str) -> GTFSData:
+    def from_gtfs(cls, path_gtfs: str) -> Self:
         """Load GTFS tables from a standard zipped GTFS file. 
 
         Args:
@@ -166,13 +218,13 @@ class GTFSData:
         """
         data = {}
         with ZipFile(path_gtfs, 'r') as zf:
-            for name in ['calendar', 'routes', 'stops', 'stop_times', 'trips']:
+            for name in cls.__annotations__.keys():
                 with zf.open(f'{name}.txt') as f:
                     data[name] = pd.read_csv(f, low_memory=False)
         return cls(**data)
 
     @classmethod
-    def from_parquet(cls, path: str) -> GTFSData:
+    def from_parquet(cls, path: str) -> Self:
         """Construct class from pre-processed GTFS tables in Parquet format.
 
         Args:
@@ -182,7 +234,7 @@ class GTFSData:
             GTFSData: GTFS data object.
         """
         data = {}
-        for name in ['calendar', 'routes', 'stops', 'stop_times', 'trips']:
+        for name in cls.__annotations__.keys():
             data[name] = pd.read_parquet(
                 os.path.join(path, f'{name}.parquet.gzip'))
         return cls(**data)
@@ -199,3 +251,19 @@ class GTFSData:
         for k, v in self.__dict__.items():
             v.to_parquet(os.path.join(
                 path_outputs, f'{k}.parquet.gzip'), compression='gzip')
+
+
+@dataclass
+class GTFSData(Data):
+    calendar: pd.DataFrame
+    routes: pd.DataFrame
+    stops: pd.DataFrame
+    stop_times: pd.DataFrame
+    trips: pd.DataFrame
+
+
+@dataclass
+class ConnectorsData(Data):
+    connectors_transfer: pd.DataFrame
+    connectors_access: pd.DataFrame
+    connectors_egress: pd.DataFrame

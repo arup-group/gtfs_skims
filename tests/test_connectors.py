@@ -183,14 +183,13 @@ def test_apply_crow_fly_factoring(gtfs_data_preprocessed, config):
 
 def test_indices_are_offset(config, gtfs_data_preprocessed, tmpdir):
     config.path_outputs = tmpdir
-    transfer_connectors, access_connectors, egress_connectors = \
-        connectors.main(config=config, data=gtfs_data_preprocessed)
+    conn = connectors.main(config=config, data=gtfs_data_preprocessed)
     stop_time_ids = list(range(len(gtfs_data_preprocessed.stop_times)))
-    assert all(np.isin(access_connectors['dnode'], stop_time_ids))
-    assert all(np.isin(egress_connectors['onode'], stop_time_ids))
-    assert np.isin(access_connectors['onode'], stop_time_ids).sum() == 0
-    assert np.isin(egress_connectors['dnode'], stop_time_ids).sum() == 0
-    assert access_connectors['onode'].max() < egress_connectors['dnode'].min()
+    assert all(np.isin(conn.connectors_access['dnode'], stop_time_ids))
+    assert all(np.isin(conn.connectors_egress['onode'], stop_time_ids))
+    assert np.isin(conn.connectors_access['onode'], stop_time_ids).sum() == 0
+    assert np.isin(conn.connectors_egress['dnode'], stop_time_ids).sum() == 0
+    assert conn.connectors_access['onode'].max() < conn.connectors_egress['dnode'].min()
 
 
 def test_main_saves_outputs(config, gtfs_data_preprocessed, tmpdir):

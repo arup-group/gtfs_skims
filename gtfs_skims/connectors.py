@@ -8,7 +8,7 @@ import numpy as np
 from scipy.spatial import KDTree
 import pandas as pd
 
-from gtfs_skims.utils import Config, GTFSData, get_logger
+from gtfs_skims.utils import Config, GTFSData, ConnectorsData, get_logger
 from gtfs_skims.variables import DATA_TYPE
 
 
@@ -327,7 +327,7 @@ def get_egress_connectors(data: GTFSData, config: Config, destinations: pd.DataF
     return arr
 
 
-def main(config: Config, data: Optional[GTFSData] = None) -> tuple[TransferConnectors, AccessEgressConnectors, AccessEgressConnectors]:
+def main(config: Config, data: Optional[GTFSData] = None) -> ConnectorsData:
     logger = get_logger(os.path.join(
         config.path_outputs, 'log_connectors.log'))
 
@@ -338,35 +338,29 @@ def main(config: Config, data: Optional[GTFSData] = None) -> tuple[TransferConne
 
     # get feasible connections
     logger.info('Getting transfer connectors...')
-    transfer_connectors = get_transfer_connectors(data, config)
+    connectors_transfer = get_transfer_connectors(data, config)
     logger.info('Getting access connectors...')
-    access_connectors = get_access_connectors(data, config, origins)
+    connectors_access = get_access_connectors(data, config, origins)
     logger.info('Getting egress connectors...')
-    egress_connectors = get_egress_connectors(data, config, destinations)
+    connectors_egress = get_egress_connectors(data, config, destinations)
 
     # convert to dataframe
     colnames = ['onode', 'dnode', 'walk', 'wait']
-    transfer_connectors = pd.DataFrame(transfer_connectors, columns=colnames)
-    access_connectors = pd.DataFrame(access_connectors, columns=colnames)
-    egress_connectors = pd.DataFrame(egress_connectors, columns=colnames)
+    connectors_transfer = pd.DataFrame(connectors_transfer, columns=colnames)
+    connectors_access = pd.DataFrame(connectors_access, columns=colnames)
+    connectors_egress = pd.DataFrame(connectors_egress, columns=colnames)
 
     # offset IDs for endpoints
-    access_connectors['onode'] += len(data.stop_times)
-    egress_connectors['dnode'] += (len(data.stop_times)+len(origins))
+    connectors_access['onode'] += len(data.stop_times)
+    connectors_egress['dnode'] += (len(data.stop_times)+len(origins))
 
     # save
-    logger.info(f'Saving connectors to f{config.path_outputs}...')
-    transfer_connectors.to_parquet(
-        os.path.join(config.path_outputs, 'connectors_transfer.parquet.gzip'),
-        compression='gzip'
+    logger.info(f'Saving connectors to {config.path_outputs}...')
+    connectors = ConnectorsData(
+        connectors_transfer=connectors_transfer,
+        connectors_access=connectors_access,
+        connectors_egress=connectors_egress,
     )
-    access_connectors.to_parquet(
-        os.path.join(config.path_outputs, 'connectors_access.parquet.gzip'),
-        compression='gzip'
-    )
-    egress_connectors.to_parquet(
-        os.path.join(config.path_outputs, 'connectors_egress.parquet.gzip'),
-        compression='gzip'
-    )
+    connectors.save(config.path_outputs)
 
-    return transfer_connectors, access_connectors, egress_connectors
+    return connectors
