@@ -100,6 +100,11 @@ def test_get_distance_matrix(small_graph_birectional):
 
 
 def test_correct_labels(config, gtfs_data_preprocessed, connectors_data, tmpdir):
+    origins = pd.read_csv(config.path_origins, index_col=0)
+    destinations = pd.read_csv(config.path_destinations, index_col=0)
     config.path_outputs = tmpdir
     distmat = graph.main(config=config, gtfs_data=gtfs_data_preprocessed,
-               connectors_data=connectors_data)
+                         connectors_data=connectors_data)
+
+    assert list(distmat.index) == list(origins.index)
+    assert list(distmat.columns) == list(destinations.index)

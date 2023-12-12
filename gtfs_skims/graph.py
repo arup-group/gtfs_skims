@@ -198,19 +198,22 @@ def main(
     distmat = get_shortest_distances(
         g, onodes=onodes_graph, dnodes=dnodes_graph)
 
+    # expand to the full OD space
+    distmat_full = pd.DataFrame(
+        np.inf, index=origins['idx'], columns=destinations['idx'])
+    distmat_full.loc[distmat.index, distmat.columns] = distmat.values
+
     # map labels
-    distmat.index = distmat.index.map(
+    distmat_full.index = distmat_full.index.map(
         origins.reset_index().set_index('idx')['name']
     )
-    distmat.columns = distmat.columns.map(
+    distmat_full.columns = distmat_full.columns.map(
         destinations.reset_index().set_index('idx')['name']
     )
-
-    # diagonal infilling
 
     # save
     path = os.path.join(config.path_outputs, 'skims.parquet.gzip')
     logger.info(f'Saving results to {path}...')
-    distmat.to_parquet(path, compression='gzip')
+    distmat_full.to_parquet(path, compression='gzip')
 
-    return distmat
+    return distmat_full
