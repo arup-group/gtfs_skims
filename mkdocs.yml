@@ -2,6 +2,8 @@ site_name: gtfs-skims
 nav:
   - Home: index.md
   - Installation: installation.md
+  - Running the tool: run.md 
+  - Methodology: methodology.md
   - Contributing: contributing.md
   - Changelog: CHANGELOG.md
   - Reference:

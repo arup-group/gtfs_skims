@@ -192,11 +192,11 @@ def main(
     destinations['idx'] = range(len(destinations))
     destinations['idx'] += (len(gtfs_data.stop_times)+len(origins))
 
-    onodes_graph = list(origins[origins['idx'].isin(edges['onode'])]['idx'])
-    dnodes_graph = list(
+    onodes_scope = list(origins[origins['idx'].isin(edges['onode'])]['idx'])
+    dnodes_scope = list(
         destinations[destinations['idx'].isin(edges['dnode'])]['idx'])
     distmat = get_shortest_distances(
-        g, onodes=onodes_graph, dnodes=dnodes_graph)
+        g, onodes=onodes_scope, dnodes=dnodes_scope)
 
     # expand to the full OD space
     distmat_full = pd.DataFrame(
@@ -211,9 +211,13 @@ def main(
         destinations.reset_index().set_index('idx')['name']
     )
 
+    # infill intra_zonal
+    distmat_full = distmat_full.\
+        apply(lambda x: np.where(x.name == x.index, np.nan, x), axis=0)
+
     # save
     path = os.path.join(config.path_outputs, 'skims.parquet.gzip')
     logger.info(f'Saving results to {path}...')
-    distmat_full.to_parquet(path, compression='gzip')
+    distmat_full.to_parquet(path, compression='gzip', index=True)
 
     return distmat_full
