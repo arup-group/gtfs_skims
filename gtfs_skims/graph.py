@@ -1,5 +1,6 @@
 from functools import partial
 import multiprocessing
+import os
 from typing import Optional
 
 from graph_tool import Graph
@@ -72,7 +73,7 @@ def add_gc(edges: pd.DataFrame, config: Config) -> pd.DataFrame:
     # adding unweighted time as well
     edges['time'] = edges[['ivt', 'walk', 'wait']].sum(1)
 
-    return edges['gc']
+    return edges
 
 
 def build_graph(
@@ -104,6 +105,18 @@ def get_shortest_distances_single(
         max_dist: Optional[float] = None,
         attribute: str = 'gc'
 ) -> np.ndarray:
+    """Get shortest distances from a single origin.
+
+    Args:
+        graph (Graph): GTFS graph.
+        onode (int): Source node.
+        dnodes (list[int]): Destination nodes.
+        max_dist (Optional[float], optional): Maximum search distance. Defaults to None.
+        attribute (str, optional): Edge weights attribute. Defaults to 'gc'.
+
+    Returns:
+        np.ndarray: Shortest distances. The first value is the source node.
+    """
     d = shortest_distance(graph, onode, dnodes,
                           weights=graph.edge_properties[attribute], dense=False,
                           max_dist=max_dist, directed=True)
@@ -119,6 +132,20 @@ def get_shortest_distances(
         max_dist: Optional[float] = None,
         attribute: str = 'gc'
 ) -> pd.DataFrame:
+    """Get shortest distances from a set of origins to a set of destinations.
+
+    Args:
+        graph (Graph): GTFS graph.
+        onode (int): Source nodes.
+        dnodes (list[int]): Destination nodes.
+        max_dist (Optional[float], optional): Maximum search distance. Defaults to None.
+        attribute (str, optional): Edge weights attribute. Defaults to 'gc'.
+
+    Returns:
+        pd.DataFrame: Shortest distances matrix.
+            The dataframe indices are the origin nodes,
+                and the column indices are the destination nodes.
+    """
     n_cpus = multiprocessing.cpu_count() - 1
     dist_wrapper = partial(get_shortest_distances_single, graph, dnodes=dnodes,
                            max_dist=max_dist, attribute=attribute)
@@ -135,5 +162,55 @@ def get_shortest_distances(
     return dists
 
 
-def main():
-    pass
+def main(
+    config: Config,
+    gtfs_data: Optional[GTFSData] = None,
+    connectors_data: Optional[ConnectorsData] = None
+) -> pd.DataFrame:
+    # read
+    logger = get_logger(os.path.join(
+        config.path_outputs, 'log_graph.log'))
+
+    logger.info('Reading files...')
+    if gtfs_data is None:
+        gtfs_data = GTFSData.from_parquet(path=config.path_outputs)
+    if connectors_data is None:
+        connectors_data = ConnectorsData.from_parquet(path=config.path_outputs)
+    origins = pd.read_csv(config.path_origins, index_col=0)
+    destinations = pd.read_csv(config.path_destinations, index_col=0)
+
+    # graph
+    logger.info('Building graph...')
+    edges = get_all_edges(gtfs_data, connectors_data)
+    edges = add_gc(edges=edges, config=config)
+    g = build_graph(edges=edges)
+
+    # shortest paths
+    logger.info('Calculating shortest distances...')
+    origins['idx'] = range(len(origins))
+    origins['idx'] += len(gtfs_data.stop_times)
+    destinations['idx'] = range(len(destinations))
+    destinations['idx'] += (len(gtfs_data.stop_times)+len(origins))
+
+    onodes_graph = list(origins[origins['idx'].isin(edges['onode'])]['idx'])
+    dnodes_graph = list(
+        destinations[destinations['idx'].isin(edges['dnode'])]['idx'])
+    distmat = get_shortest_distances(
+        g, onodes=onodes_graph, dnodes=dnodes_graph)
+
+    # map labels
+    distmat.index = distmat.index.map(
+        origins.reset_index().set_index('idx')['name']
+    )
+    distmat.columns = distmat.columns.map(
+        destinations.reset_index().set_index('idx')['name']
+    )
+
+    # diagonal infilling
+
+    # save
+    path = os.path.join(config.path_outputs, 'skims.parquet.gzip')
+    logger.info(f'Saving results to {path}...')
+    distmat.to_parquet(path, compression='gzip')
+
+    return distmat

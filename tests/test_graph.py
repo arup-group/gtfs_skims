@@ -97,3 +97,9 @@ def test_get_distance_matrix(small_graph_birectional):
     assert list(distmat.columns) == [1, 2]
 
     np.testing.assert_equal(distmat.values, expected)
+
+
+def test_correct_labels(config, gtfs_data_preprocessed, connectors_data, tmpdir):
+    config.path_outputs = tmpdir
+    distmat = graph.main(config=config, gtfs_data=gtfs_data_preprocessed,
+               connectors_data=connectors_data)

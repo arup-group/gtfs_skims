@@ -40,5 +40,5 @@ mike-*.yml
 .ipynb_checkpoints
 
 sandbox.py
-# tests/test_data/outputs/
+tests/test_data/outputs/
 tests/test_data/outputs/*log

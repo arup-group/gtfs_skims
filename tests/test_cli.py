@@ -43,3 +43,7 @@ def test_run_steps_saves_outputs(tmpdir):
         assert os.path.exists(
             os.path.join(tmpdir, f'connectors_{x}.parquet.gzip')
         )
+
+    assert os.path.exists(
+        os.path.join(tmpdir, f'skims.parquet.gzip')
+    )
