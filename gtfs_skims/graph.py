@@ -195,8 +195,10 @@ def main(
     onodes_scope = list(origins[origins['idx'].isin(edges['onode'])]['idx'])
     dnodes_scope = list(
         destinations[destinations['idx'].isin(edges['dnode'])]['idx'])
+    maxdist = config.end_s - config.start_s
     distmat = get_shortest_distances(
-        g, onodes=onodes_scope, dnodes=dnodes_scope)
+        g, onodes=onodes_scope, dnodes=dnodes_scope, 
+        max_dist=maxdist)
 
     # expand to the full OD space
     distmat_full = pd.DataFrame(
@@ -214,6 +216,7 @@ def main(
     # infill intra_zonal
     distmat_full = distmat_full.\
         apply(lambda x: np.where(x.name == x.index, np.nan, x), axis=0)
+    distmat_full = distmat_full.map(lambda x: np.where(x>=maxdist, np.inf, x))
 
     # save
     path = os.path.join(config.path_outputs, 'skims.parquet.gzip')
