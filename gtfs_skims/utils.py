@@ -4,7 +4,7 @@ from datetime import datetime
 import logging
 import os
 from pathlib import Path
-from typing import Optional, Self
+from typing import Optional
 import yaml
 from zipfile import ZipFile
 
@@ -207,7 +207,7 @@ class Config:
 @dataclass
 class Data:
     @classmethod
-    def from_gtfs(cls, path_gtfs: str) -> Self:
+    def from_gtfs(cls, path_gtfs: str) -> Data:
         """Load GTFS tables from a standard zipped GTFS file. 
 
         Args:
@@ -224,7 +224,7 @@ class Data:
         return cls(**data)
 
     @classmethod
-    def from_parquet(cls, path: str) -> Self:
+    def from_parquet(cls, path: str) -> Data:
         """Construct class from pre-processed GTFS tables in Parquet format.
 
         Args:
