@@ -1,12 +1,11 @@
-from collections import defaultdict
 import itertools
 import os
+from collections import defaultdict
 
 import numpy as np
 import pytest
-import unittest.mock as mock
 
-from gtfs_skims import connectors, preprocessing
+from gtfs_skims import connectors
 
 
 @pytest.fixture()
@@ -28,17 +27,17 @@ def find_index(coords, x, y, z):
 
 def get_valid_points(coords, source_idx, max_trasfer_dist):
     dcoords = coords - coords[source_idx]
-    walk = (dcoords[:, :2]**2).sum(1)**0.5  # euclidean distance on xy
+    walk = (dcoords[:, :2] ** 2).sum(1) ** 0.5  # euclidean distance on xy
     wait = dcoords[:, 2] - walk
 
-    is_valid = (wait > 0) & ((walk+wait) <= max_trasfer_dist)
+    is_valid = (wait > 0) & ((walk + wait) <= max_trasfer_dist)
 
     return is_valid
 
 
-@pytest.mark.parametrize('source', [(0, 0, 0), (2.5, 2.5, 2.5), (-2.5, 0, 2.5)])
+@pytest.mark.parametrize("source", [(0, 0, 0), (2.5, 2.5, 2.5), (-2.5, 0, 2.5)])
 def test_query_all_valid_included(points, source):
-    """ All valid points are included in the query results """
+    """All valid points are included in the query results"""
     source_idx = find_index(points, *source)
     maxdist = 10
     is_valid = get_valid_points(points, source_idx, maxdist)
@@ -50,9 +49,9 @@ def test_query_all_valid_included(points, source):
     assert is_valid[dest].sum() == is_valid.sum()
 
 
-@pytest.mark.parametrize('source', [(0, 0, 0), (2.5, 2.5, 2.5), (-2.5, 0, 2.5)])
+@pytest.mark.parametrize("source", [(0, 0, 0), (2.5, 2.5, 2.5), (-2.5, 0, 2.5)])
 def test_query_all_included_valid(points, source):
-    """ All results from the query are valid """
+    """All results from the query are valid"""
     source_idx = find_index(points, *source)
     maxdist = 10
     is_valid = get_valid_points(points, source_idx, maxdist)
@@ -91,15 +90,13 @@ def get_o_service_transfers(conn, services_d):
     transfer_times = conn.wait + conn.walk
     d = defaultdict(list)
     for i in range(len(services_d)):
-        d[(conn.ods[i, 0], services_d[i])
-          ].append(transfer_times[i])
+        d[(conn.ods[i, 0], services_d[i])].append(transfer_times[i])
     return d
 
 
 def test_filter_nearest_service(transfer_connectors):
     np.random.seed(0)
-    services = np.random.randint(
-        0, 2, size=transfer_connectors.coords.shape[0])
+    services = np.random.randint(0, 2, size=transfer_connectors.coords.shape[0])
     services_d = services[transfer_connectors.ods[:, 1]]
 
     # for every origin-service pair there are multiple connections
@@ -131,36 +128,24 @@ def test_get_transfer_array(gtfs_data_preprocessed, config):
 
 def test_get_od_pairs():
     ods = connectors.query_pairs_od(
-        np.array([[0, 0], [1, 1]]),
-        np.array([[0.5, 0.5], [2, 1], [2, 2]]),
-        radius=1
+        np.array([[0, 0], [1, 1]]), np.array([[0.5, 0.5], [2, 1], [2, 2]]), radius=1
     )
-    expected = np.array([
-        [0, 0],
-        [1, 0],
-        [1, 1]
-    ])
+    expected = np.array([[0, 0], [1, 0], [1, 1]])
     np.testing.assert_equal(ods, expected)
 
 
 def test_get_od_walk():
     egress = connectors.AccessEgressConnectors(
-        np.array([[0, 0], [1, 1]]),
-        np.array([[0.5, 0.5], [2, 1], [2, 2]]),
-        max_transfer_distance=1
+        np.array([[0, 0], [1, 1]]), np.array([[0.5, 0.5], [2, 1], [2, 2]]), max_transfer_distance=1
     )
     walk = egress.walk
-    expected = np.array([
-        (2*0.5**2)**0.5, (2*0.5**2)**0.5, 1
-    ])
+    expected = np.array([(2 * 0.5**2) ** 0.5, (2 * 0.5**2) ** 0.5, 1])
     np.testing.assert_almost_equal(walk, expected)
 
 
 def test_convert_distance_3d():
     access = connectors.AccessEgressConnectors(
-        np.array([[0, 0, 0]]),
-        np.array([[1, 1, 1]]),
-        max_transfer_distance=1
+        np.array([[0, 0, 0]]), np.array([[1, 1, 1]]), max_transfer_distance=1
     )
     assert len(access.ods) == 1  # radius has been adjusted to 3D space
 
@@ -185,17 +170,15 @@ def test_indices_are_offset(config, gtfs_data_preprocessed, tmpdir):
     config.path_outputs = tmpdir
     conn = connectors.main(config=config, data=gtfs_data_preprocessed)
     stop_time_ids = list(range(len(gtfs_data_preprocessed.stop_times)))
-    assert all(np.isin(conn.connectors_access['dnode'], stop_time_ids))
-    assert all(np.isin(conn.connectors_egress['onode'], stop_time_ids))
-    assert np.isin(conn.connectors_access['onode'], stop_time_ids).sum() == 0
-    assert np.isin(conn.connectors_egress['dnode'], stop_time_ids).sum() == 0
-    assert conn.connectors_access['onode'].max() < conn.connectors_egress['dnode'].min()
+    assert all(np.isin(conn.connectors_access["dnode"], stop_time_ids))
+    assert all(np.isin(conn.connectors_egress["onode"], stop_time_ids))
+    assert np.isin(conn.connectors_access["onode"], stop_time_ids).sum() == 0
+    assert np.isin(conn.connectors_egress["dnode"], stop_time_ids).sum() == 0
+    assert conn.connectors_access["onode"].max() < conn.connectors_egress["dnode"].min()
 
 
 def test_main_saves_outputs(config, gtfs_data_preprocessed, tmpdir):
     config.path_outputs = tmpdir
     connectors.main(config=config, data=gtfs_data_preprocessed)
-    for x in ['transfer', 'access', 'egress']:
-        assert os.path.exists(
-            os.path.join(tmpdir, f'connectors_{x}.parquet.gzip')
-        )
+    for x in ["transfer", "access", "egress"]:
+        assert os.path.exists(os.path.join(tmpdir, f"connectors_{x}.parquet.gzip"))

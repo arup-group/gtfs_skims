@@ -12,9 +12,9 @@ from pathlib import Path
 
 import pytest
 
-from gtfs_skims.utils import Config, GTFSData, ConnectorsData
+from gtfs_skims.utils import Config, ConnectorsData, GTFSData
 
-TEST_DATA_DIR = os.path.join(Path(__file__).parent, 'test_data')
+TEST_DATA_DIR = os.path.join(Path(__file__).parent, "test_data")
 
 
 @pytest.fixture
@@ -29,19 +29,19 @@ def response():
 
 @pytest.fixture
 def config():
-    return Config.from_yaml(os.path.join(TEST_DATA_DIR, 'config_demo.yaml'))
+    return Config.from_yaml(os.path.join(TEST_DATA_DIR, "config_demo.yaml"))
 
 
 @pytest.fixture
 def gtfs_data():
-    return GTFSData.from_gtfs(os.path.join(TEST_DATA_DIR, 'iow-bus-gtfs.zip'))
+    return GTFSData.from_gtfs(os.path.join(TEST_DATA_DIR, "iow-bus-gtfs.zip"))
 
 
 @pytest.fixture
 def gtfs_data_preprocessed():
-    return GTFSData.from_parquet(os.path.join(TEST_DATA_DIR, 'outputs'))
+    return GTFSData.from_parquet(os.path.join(TEST_DATA_DIR, "outputs"))
 
 
 @pytest.fixture
 def connectors_data():
-    return ConnectorsData.from_parquet(os.path.join(TEST_DATA_DIR, 'outputs'))
+    return ConnectorsData.from_parquet(os.path.join(TEST_DATA_DIR, "outputs"))

@@ -1,14 +1,15 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from datetime import datetime
+
 import logging
 import os
+from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
-import yaml
 from zipfile import ZipFile
 
 import pandas as pd
+import yaml
 
 
 def ts_to_sec(x: str) -> int:
@@ -20,8 +21,8 @@ def ts_to_sec(x: str) -> int:
     Returns:
         int: Seconds from midnight
     """
-    s = [int(i) for i in x.split(':')]
-    return 3600*s[0]+60*s[1]+s[2]
+    s = [int(i) for i in x.split(":")]
+    return 3600 * s[0] + 60 * s[1] + s[2]
 
 
 def get_weekday(date: int) -> str:
@@ -33,8 +34,8 @@ def get_weekday(date: int) -> str:
     Returns:
         str: Day name
     """
-    weekday = datetime.strptime(str(date), '%Y%m%d')
-    weekday = datetime.strftime(weekday, '%A').lower()
+    weekday = datetime.strptime(str(date), "%Y%m%d")
+    weekday = datetime.strftime(weekday, "%A").lower()
     return weekday
 
 
@@ -50,8 +51,7 @@ def get_logger(path_output: Optional[str] = None) -> logging.Logger:
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     handler = logging.StreamHandler()
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     handler.setFormatter(formatter)
     if len(logger.handlers) == 0:
         logger.addHandler(handler)
@@ -63,7 +63,7 @@ def get_logger(path_output: Optional[str] = None) -> logging.Logger:
         if not os.path.exists(parent_dir):
             os.makedirs(parent_dir)
 
-        file_handler = logging.FileHandler(path_output, mode='w')
+        file_handler = logging.FileHandler(path_output, mode="w")
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
 
@@ -104,6 +104,7 @@ class Config:
     ```
 
     """
+
     path_gtfs: str
     path_outputs: str
     path_origins: str
@@ -133,82 +134,23 @@ class Config:
         Returns:
             Config: Config object
         """
-        with open(path, 'r') as f:
+        with open(path, "r") as f:
             config = yaml.safe_load(f)
-        config_flat = {
-            **config['paths'],
-            **config['settings'],
-            'steps': config['steps']
-        }
+        config_flat = {**config["paths"], **config["settings"], "steps": config["steps"]}
         return cls(**config_flat)
 
     def __repr__(self) -> str:
-        s = 'Config file\n'
-        s += '-'*50 + '\n'
+        s = "Config file\n"
+        s += "-" * 50 + "\n"
         s += yaml.dump(self.__dict__)
         return s
-
-
-# @dataclass
-# class GTFSData:
-#     calendar: pd.DataFrame
-#     routes: pd.DataFrame
-#     stops: pd.DataFrame
-#     stop_times: pd.DataFrame
-#     trips: pd.DataFrame
-
-#     @classmethod
-#     def from_gtfs(cls, path_gtfs: str) -> GTFSData:
-#         """Load GTFS tables from a standard zipped GTFS file.
-
-#         Args:
-#             path_gtfs (str): Path to a zipped GTFS dataset.
-
-#         Returns:
-#             GTFSData: GTFS data object.
-#         """
-#         data = {}
-#         with ZipFile(path_gtfs, 'r') as zf:
-#             for name in ['calendar', 'routes', 'stops', 'stop_times', 'trips']:
-#                 with zf.open(f'{name}.txt') as f:
-#                     data[name] = pd.read_csv(f, low_memory=False)
-#         return cls(**data)
-
-#     @classmethod
-#     def from_parquet(cls, path: str) -> GTFSData:
-#         """Construct class from pre-processed GTFS tables in Parquet format.
-
-#         Args:
-#             path (str): Path to tables.
-
-#         Returns:
-#             GTFSData: GTFS data object.
-#         """
-#         data = {}
-#         for name in ['calendar', 'routes', 'stops', 'stop_times', 'trips']:
-#             data[name] = pd.read_parquet(
-#                 os.path.join(path, f'{name}.parquet.gzip'))
-#         return cls(**data)
-
-#     def save(self, path_outputs: str) -> None:
-#         """Export all tables in zipped parquet format.
-
-#         Args:
-#             path_outputs (str): Directory to save outputs.
-#         """
-#         if not os.path.exists(path_outputs):
-#             os.makedirs(path_outputs)
-
-#         for k, v in self.__dict__.items():
-#             v.to_parquet(os.path.join(
-#                 path_outputs, f'{k}.parquet.gzip'), compression='gzip')
 
 
 @dataclass
 class Data:
     @classmethod
     def from_gtfs(cls, path_gtfs: str) -> Data:
-        """Load GTFS tables from a standard zipped GTFS file. 
+        """Load GTFS tables from a standard zipped GTFS file.
 
         Args:
             path_gtfs (str): Path to a zipped GTFS dataset.
@@ -217,9 +159,9 @@ class Data:
             GTFSData: GTFS data object.
         """
         data = {}
-        with ZipFile(path_gtfs, 'r') as zf:
+        with ZipFile(path_gtfs, "r") as zf:
             for name in cls.__annotations__.keys():
-                with zf.open(f'{name}.txt') as f:
+                with zf.open(f"{name}.txt") as f:
                     data[name] = pd.read_csv(f, low_memory=False)
         return cls(**data)
 
@@ -235,8 +177,7 @@ class Data:
         """
         data = {}
         for name in cls.__annotations__.keys():
-            data[name] = pd.read_parquet(
-                os.path.join(path, f'{name}.parquet.gzip'))
+            data[name] = pd.read_parquet(os.path.join(path, f"{name}.parquet.gzip"))
         return cls(**data)
 
     def save(self, path_outputs: str) -> None:
@@ -249,8 +190,7 @@ class Data:
             os.makedirs(path_outputs)
 
         for k, v in self.__dict__.items():
-            v.to_parquet(os.path.join(
-                path_outputs, f'{k}.parquet.gzip'), compression='gzip')
+            v.to_parquet(os.path.join(path_outputs, f"{k}.parquet.gzip"), compression="gzip")
 
 
 @dataclass
