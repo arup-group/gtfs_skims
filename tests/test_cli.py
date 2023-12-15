@@ -17,7 +17,7 @@ def test_command_line_interface():
     help_result = runner.invoke(cli.cli, ["--help"])
     assert help_result.exit_code == 0
     assert (
-        "Console script for gtfs_skims.\n\nOptions:\n  "
+        "Console script for Argo (gtfs_skims).\n\nOptions:\n  "
         "--version  Show the version and exit.\n  "
         "--help     Show this message and exit.\n" in help_result.output
     )
