@@ -7,12 +7,11 @@
 [![Daily CI Build](https://github.com/arup-group/gtfs_skims/actions/workflows/daily-scheduled-ci.yml/badge.svg)](https://github.com/arup-group/gtfs_skims/actions/workflows/daily-scheduled-ci.yml)
 [![Documentation](https://github.com/arup-group/gtfs_skims/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://arup-group.github.io/gtfs_skims)
 
-<!--- --8<-- [end:docs] -->
-
-
-Argo is a library aimed at the fast calculation of generalised time matrices from GTFS files. 
-By applying appropriate simplifications on the GTFS dataset, the library is able to calculate such matrices at scale. 
+Argo is a library aimed at the fast calculation of generalised time matrices from GTFS files.
+By applying appropriate simplifications on the GTFS dataset, the library is able to calculate such matrices at scale.
 For example, it was possible to calculate an MSOA-to-MSOA matrix for England and Wales in ~1 hour (with a relatevile large machine).
+
+<!--- --8<-- [end:docs] -->
 
 ## Documentation
 
