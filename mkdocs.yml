@@ -2,7 +2,7 @@ site_name: gtfs-skims
 nav:
   - Home: index.md
   - Installation: installation.md
-  - Running the tool: run.md 
+  - Running the tool: run.md
   - Methodology: methodology.md
   - Contributing: contributing.md
   - Changelog: CHANGELOG.md
@@ -34,6 +34,8 @@ markdown_extensions:
   - toc:
       permalink: "#"
       toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
 hooks:
   - docs/static/hooks.py
 plugins:
@@ -56,10 +58,19 @@ plugins:
           import:
             - https://docs.python.org/3/objects.inv
   - search
+
 watch:
   - gtfs_skims
+
 extra_css:
   - static/extras.css
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css
+
 extra:
   version:
     provider: mike
+
+extra_javascript:
+  - static/extras.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/contrib/auto-render.min.js
