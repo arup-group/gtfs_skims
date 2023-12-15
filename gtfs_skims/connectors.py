@@ -18,7 +18,7 @@ def query_pairs(coords: np.ndarray, radius: float) -> np.array:
             has always greater z coordinate than the origin point.
 
     Args:
-        coords (np.array): Point coordinates (x, y, z)
+        coords (np.ndarray): Point coordinates (x, y, z)
         radius (float): Maximum distance between points
 
     Returns:
@@ -33,9 +33,13 @@ def query_pairs(coords: np.ndarray, radius: float) -> np.array:
 
 
 class TransferConnectors:
-    """Manages transfer connectors."""
-
     def __init__(self, coords: np.ndarray, max_transfer_distance: float) -> None:
+        """Manages transfer connectors.
+
+        Args:
+            coords (np.ndarray): Point coordinates (x, y, z)
+            max_transfer_distance (float): Maximum distance between points
+        """
         self.coords = coords
         radius = max_transfer_distance * (2**0.5)
         self.ods = query_pairs(coords, radius=radius)

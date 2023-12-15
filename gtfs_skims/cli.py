@@ -13,8 +13,7 @@ from gtfs_skims.utils import Config
 @click.version_option(package_name="gtfs_skims")
 @click.group
 def cli(args=None):
-    """Console script for gtfs_skims."""
-    click.echo("Console script for Argo (gtfs_skims).")
+    """Console script for Argo (gtfs_skims)."""
     return 0
 
 

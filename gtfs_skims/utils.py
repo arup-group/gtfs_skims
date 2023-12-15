@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -147,7 +148,7 @@ class Config:
 
 
 @dataclass
-class Data:
+class Data(ABC):
     @classmethod
     def from_gtfs(cls, path_gtfs: str) -> Data:
         """Load GTFS tables from a standard zipped GTFS file.
