@@ -1,6 +1,8 @@
 
 # Installation
 
+Note: this library only supports Unix-based systems (ie Ubuntu/macOS). If you wish to use it on Windows please use the Windows Subsystem for Linux.
+
 ## Setting up a user environment
 
 As a `gtfs_skims` user, it is easiest to install using the [mamba](https://mamba.readthedocs.io/en/latest/index.html) package manager, as follows:
