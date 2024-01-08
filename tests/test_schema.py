@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
-import yaml
 
 import jsonschema
+import yaml
 
 CONFIG_DATA_DIR = os.path.join(Path(__file__).parent, "..", "config")
 TEST_DATA_DIR = os.path.join(Path(__file__).parent, "test_data")
