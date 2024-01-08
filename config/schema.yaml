@@ -24,27 +24,38 @@ properties:
       calendar_date:
         type: integer
         description: Date for filtering the GTFS file in yyyymmdd format.
+        minimum: 10000000
+        maximum: 99999999
       start_s:
         type: integer
         description: Start time of the journey (seconds from midnight).
+        minimum: 0
+        maximum: 86400
       end_s:
         type: integer
         description: Max end time of a journey (seconds from midnight).
+        minimum: 0
+        maximum: 86400
       walk_distance_threshold:
         type: integer
         description: Max walk distance in a leg (metres).
+        minimum: 0
       walk_speed:
         type: number
         description: Walking speed (km/h).
+        minimum: 0
       crows_fly_factor:
         type: number
         description: Conversion factor from euclidean to routed distances.
+        minimum: 1
       max_transfer_time:
         type: integer
         description: Max combined time of walking and waiting of a transfer (seconds).
+        minimum: 0
       max_wait:
         type: integer
         description: Max wait time at a stop/leg (seconds).
+        minimum: 0
       bounding_box:
       bounding_box:
         type:
@@ -62,12 +73,15 @@ properties:
       weight_walk:
         type: number
         description: Value of walk time, ratio to in-vehicle time.
+        minimum: 0
       weight_wait:
         type: number
         description: Value of wait time, ratio to in-vehicle time.
+        minimum: 0
       penalty_interchange:
         type: integer
         description: Seconds added to generalised cost for each interchange.
+        minimum: 0
   steps:
     type: array
     items:
