@@ -13,7 +13,8 @@ source:
 build:
   # Add the line
   # "skip: True  # [not win]" to skip all architectures **except** Windows (also remove `noarch: python` below).
-  "skip: True  # [win]" # to skip **only** Windows.
+  # to skip **only** Windows:
+  skip: True  # [win]
   script: {{ PYTHON }} -m pip install --no-deps --ignore-installed -vv .
   # noarch: python
 
