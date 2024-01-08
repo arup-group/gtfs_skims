@@ -51,12 +51,13 @@ plugins:
               - "!^_"
             merge_init_into_class: true
             show_if_no_docstring: true
-            show_signature_annotations: true
             signature_crossrefs: true
             show_root_toc_entry: false
             show_signature_annotations: false
           import:
             - https://docs.python.org/3/objects.inv
+            - https://pandas.pydata.org/docs/objects.inv
+            - https://numpy.org/doc/stable/objects.inv
   - search
 
 watch:

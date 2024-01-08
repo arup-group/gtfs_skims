@@ -151,15 +151,15 @@ def get_shortest_distances(
 
     Args:
         graph (Graph): GTFS graph.
-        onode (int): Source nodes.
+        onodes (int): Source nodes.
         dnodes (list[int]): Destination nodes.
         max_dist (Optional[float], optional): Maximum search distance. Defaults to None.
         attribute (str, optional): Edge weights attribute. Defaults to 'gc'.
 
     Returns:
-        pd.DataFrame: Shortest distances matrix.
-            The dataframe indices are the origin nodes,
-                and the column indices are the destination nodes.
+        pd.DataFrame:
+            Shortest distances matrix.
+            The dataframe indices are the origin nodes, and the column indices are the destination nodes.
     """
     n_cpus = multiprocessing.cpu_count() - 1
     dist_wrapper = partial(
