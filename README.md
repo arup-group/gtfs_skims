@@ -28,6 +28,7 @@ To install gtfs_skims, we recommend using the [mamba](https://mamba.readthedocs.
 ``` shell
 
 mamba create -n gtfs_skims -c conda-forge -c city-modelling-lab gtfs_skims
+mamba activate gtfs_skims
 
 ```
 <!--- --8<-- [end:docs-install-user] -->
