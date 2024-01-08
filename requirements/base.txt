@@ -1,6 +1,7 @@
 click
 fastparquet
 graph-tool
+jsonschema
 numpy
 pandas
 pyproj
