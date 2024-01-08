@@ -8,7 +8,9 @@ Some of the resources to look at if you're interested in contributing:
 * Look at the [contributing guide in our documentation](https://arup-group.github.io/gtfs_skims/contributing)
 
 ## Licensing
+
 By contributing to gtfs_skims, i.e. through opening a pull request, you represent that your contributions are your own original work and that you have the right to license them, and you agree that your contributions are licensed under the MIT license.
+
 ## Reporting bugs and requesting features
 
 You can open an issue on GitHub to report bugs or request new gtfs_skims features.
