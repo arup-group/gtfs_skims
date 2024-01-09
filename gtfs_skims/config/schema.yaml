@@ -1,10 +1,12 @@
 $schema: https://json-schema.org/draft/2020-12
 title: Schema of the gtfs-skims config file.
 type: object
+additionalProperties: false
 properties:
   paths:
     description: Path to input / output files.
     type: object
+    additionalProperties: false
     properties:
       path_gtfs:
         type: string
@@ -20,6 +22,7 @@ properties:
         description: Path to the destination points csv file.
   settings:
     type: object
+    additionalProperties: false
     properties:
       calendar_date:
         type: integer

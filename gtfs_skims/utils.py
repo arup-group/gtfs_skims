@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import importlib
 import logging
 import os
 from abc import ABC
@@ -10,6 +9,7 @@ from pathlib import Path
 from typing import Optional
 from zipfile import ZipFile
 
+import importlib_resources
 import jsonschema
 import pandas as pd
 import yaml
@@ -81,7 +81,7 @@ def get_schema() -> dict:
     Returns:
         dict: Config yaml file schema.
     """
-    path = importlib.resources.files(schema_dir).joinpath("schema.yaml")
+    path = importlib_resources.files(schema_dir).joinpath("schema.yaml")
     with open(path, "r") as f:
         schema = yaml.safe_load(f)
     return schema
