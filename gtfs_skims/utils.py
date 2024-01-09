@@ -9,8 +9,12 @@ from pathlib import Path
 from typing import Optional
 from zipfile import ZipFile
 
+import importlib_resources
+import jsonschema
 import pandas as pd
 import yaml
+
+from gtfs_skims import config as schema_dir
 
 
 def ts_to_sec(x: str) -> int:
@@ -69,6 +73,18 @@ def get_logger(path_output: Optional[str] = None) -> logging.Logger:
         logger.addHandler(file_handler)
 
     return logger
+
+
+def get_schema() -> dict:
+    """Get the config schema.
+
+    Returns:
+        dict: Config yaml file schema.
+    """
+    path = importlib_resources.files(schema_dir).joinpath("schema.yaml")
+    with open(path, "r") as f:
+        schema = yaml.safe_load(f)
+    return schema
 
 
 @dataclass
@@ -137,6 +153,11 @@ class Config:
         """
         with open(path, "r") as f:
             config = yaml.safe_load(f)
+
+        # validate
+        schema = get_schema()
+        jsonschema.validate(config, schema, cls=jsonschema.Draft202012Validator)
+
         config_flat = {**config["paths"], **config["settings"], "steps": config["steps"]}
         return cls(**config_flat)
 
