@@ -69,7 +69,7 @@ include = ["gtfs_skims*"]
 [tool.setuptools.package-data]
 # Add file globs from the source code directory if they include non-py files that should be packaged
 # E.g. "fixtures/**/*"
-gtfs_skims = []
+gtfs_skims = ["config/*"]
 
 
 [build-system]

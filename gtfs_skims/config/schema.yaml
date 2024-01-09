@@ -1,5 +1,5 @@
-$schema: http://json-schema.org/draft-07/schema#
-description: Schema of the gtfs-skims config file.
+$schema: https://json-schema.org/draft/2020-12
+title: Schema of the gtfs-skims config file.
 type: object
 properties:
   paths:
