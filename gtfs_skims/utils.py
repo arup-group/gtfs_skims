@@ -81,7 +81,7 @@ def get_schema() -> dict:
     Returns:
         dict: Config yaml file schema.
     """
-    path = importlib.resources.files(schema_dir) / "schema.yaml"
+    path = importlib.resources.files(schema_dir).joinpath("schema.yaml")
     with open(path, "r") as f:
         schema = yaml.safe_load(f)
     return schema

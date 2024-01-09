@@ -11,7 +11,7 @@ TEST_DATA_DIR = os.path.join(Path(__file__).parent, "test_data")
 
 
 def test_config_schema():
-    path = importlib.resources.files(schema_dir) / "schema.yaml"
+    path = importlib.resources.files(schema_dir).joinpath("schema.yaml")
     with open(path, "r") as f:
         schema = yaml.safe_load(f)
 
