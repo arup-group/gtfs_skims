@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/arup-group/cookiecutter-pypackage",
-  "commit": "4d636478a93a24b6eebefc6adbee9db4121430fd",
+  "commit": "641cc1cd08b540e5dad4f8f3b294e81a0e62440e",
   "checkout": null,
   "context": {
     "cookiecutter": {
