@@ -9,9 +9,10 @@ As a `gtfs_skims` user, it is easiest to install using the [mamba](https://mamba
 
 1. Install mamba with the [Mambaforge](https://github.com/conda-forge/miniforge#mambaforge) executable for your operating system.
 2. Open the command line (or the "miniforge prompt" in Windows).
-
-3. Create the gtfs_skims mamba environment: `mamba create -n gtfs_skims -c conda-forge -c city-modelling-lab gtfs_skims`
-4. Activate the gtfs_skims mamba environment: `mamba activate gtfs_skims`
+3. Clone the gtfs_skims repository: `git clone git@github.com:arup-group/gtfs_skims.git`
+4. Create the gtfs_skims mamba environment and install library dependencies: `cd gtfs_skims && mamba create -n gtfs_skims -c conda-forge --file requirements/base.txt`
+5. Activate the gtfs_skims mamba environment: `mamba activate gtfs_skims`
+6. Install the gtfs_skims library: `pip install --no-deps -e .`
 
 
 All together:
