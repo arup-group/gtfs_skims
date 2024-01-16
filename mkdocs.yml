@@ -36,6 +36,9 @@ markdown_extensions:
       toc_depth: 3
   - pymdownx.arithmatex:
       generic: true
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
 hooks:
   - docs/static/hooks.py
 plugins:
