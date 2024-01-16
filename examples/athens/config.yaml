@@ -1,0 +1,25 @@
+paths:
+  path_gtfs: ./examples/athens/gtfs.zip
+  path_outputs: ./examples/athens/outputs
+  path_origins: ./examples/athens/centroids.zip # path to the origin points
+  path_destinations: ./examples/athens/centroids.zip # path to the destination points
+
+settings:
+  calendar_date : 20161201 # yyyymmdd | Date for filtering the GTFS file.
+  start_s : 32400 # sec | Start time of the journey.
+  end_s : 39600 # sec | Max end time of a journey.
+  walk_distance_threshold : 2000  # m | Max walk distance in a leg
+  walk_speed : 4  # kph | Walking speed
+  crows_fly_factor : 1.3 # Conversion factor from euclidean to routed distances
+  max_transfer_time : 1800 # Max combined time of walking and waiting (sec) of a transfer
+  max_wait : 1800  # sec | Max wait time at a stop / leg
+  bounding_box : null
+  epsg_centroids: 2100 # coordinate system of the centroids file. Needs to be Cartesian and in meters.
+  weight_walk: 1 # value of walk time, ratio to in-vehicle time
+  weight_wait: 1 # value of wait time, ratio to in-vehicle time
+  penalty_interchange: 0 # seconds added to generalised cost for each interchange
+
+steps:
+ - preprocessing
+ - connectors
+ - graph
