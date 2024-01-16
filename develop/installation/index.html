@@ -722,16 +722,18 @@
 <p>As a <code>gtfs_skims</code> user, it is easiest to install using the <a href="https://mamba.readthedocs.io/en/latest/index.html">mamba</a> package manager, as follows:</p>
 <ol>
 <li>Install mamba with the <a href="https://github.com/conda-forge/miniforge#mambaforge">Mambaforge</a> executable for your operating system.</li>
-<li>
-<p>Open the command line (or the "miniforge prompt" in Windows).</p>
-</li>
-<li>
-<p>Create the gtfs_skims mamba environment: <code>mamba create -n gtfs_skims -c conda-forge -c city-modelling-lab gtfs_skims</code></p>
-</li>
+<li>Open the command line (or the "miniforge prompt" in Windows).</li>
+<li>Clone the gtfs_skims repository: <code>git clone git@github.com:arup-group/gtfs_skims.git</code></li>
+<li>Create the gtfs_skims mamba environment and install library dependencies: <code>cd gtfs_skims &amp;&amp; mamba create -n gtfs_skims -c conda-forge --file requirements/base.txt</code></li>
 <li>Activate the gtfs_skims mamba environment: <code>mamba activate gtfs_skims</code></li>
+<li>Install the gtfs_skims library: <code>pip install --no-deps -e .</code></li>
 </ol>
 <p>All together:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>mamba<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>gtfs_skims<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>city-modelling-lab<span class="w"> </span>gtfs_skims
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:arup-group/gtfs_skims.git
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>gtfs_skims
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>mamba<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>gtfs_skims<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>--file<span class="w"> </span>requirements/base.txt
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>mamba<span class="w"> </span>activate<span class="w"> </span>gtfs_skims
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>-e<span class="w"> </span>.
 </span></code></pre></div>
 <h2 id="setting-up-a-development-environment">Setting up a development environment<a class="headerlink" href="#setting-up-a-development-environment" title="Permanent link">#</a></h2>
 <p>The install instructions are slightly different to create a development environment compared to a user environment:</p>

@@ -644,7 +644,7 @@
 
 <h1 id="running-argo">Running Argo<a class="headerlink" href="#running-argo" title="Permanent link">#</a></h1>
 <p>To run argo simply type this command on the command line:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>argo run &lt;CONFIG_PATH&gt;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gtfs_skims run &lt;CONFIG_PATH&gt;
 </span></code></pre></div>
 , where <CONFIG_PATH> is the path to the config yaml file.</p>
 <p>An example config file is shown below:
@@ -674,8 +674,9 @@
 </span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  - connectors
 </span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  - graph
 </span></code></pre></div></p>
+<p>More information about the config can be found in the schema definition <a href="https://github.com/arup-group/gtfs_skims/blob/main/gtfs_skims/config/schema.yaml">here</a>.</p>
 <p>To run the example provided by the repo, use:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>argo run ./tests/test_data/config_demo.yaml
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gtfs_skims run ./tests/test_data/config_demo.yaml
 </span></code></pre></div></p>
 <p>The time matrices will be saved in the <code>output_path</code> directory defined in the config file, in the <code>skims.parquet.gzip</code> file. An easy way to read the file is with pandas:
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>import pandas as pd

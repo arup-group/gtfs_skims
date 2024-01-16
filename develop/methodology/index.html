@@ -650,24 +650,41 @@ gc = ivt + \beta_{wait} \cdot wait\_time + \beta_{walk} \cdot walk\_time + \beta
 \]</div>
 <p>Some example values for the leg component weights are: </p>
 <div class="arithmatex">\[
-\beta_{wait} = \beta_{walk} = 2-3
-\]</div>
-<p>and </p>
-<div class="arithmatex">\[
-\beta_{\text{interchange\_penalty}} = 5 \text{ to } 10 \text{ minutes}
+\beta_{wait} = \beta_{walk} \sim 2 \text{ to } 3 \\
+\beta_{interchange\_penalty} \sim 5 \text{ to } 10 \text{ minutes}
 \]</div>
 <p>Walk distance is calculated as the crow's fly distance between two points, multiplied by a factor specified in the config file (typically ~1.3).</p>
 <p>The library creates a graph representation of the GTFS dataset, where the edges represent vehicle movements or connections (access/egress/transfer legs). It then applied a shortest-paths algorithm, using generalised time as edge weights.</p>
-<p>To achieve high performance, the user can limit the search space by:
-* selecting a time scope and maximum travel time
-* selecting a specific day
-* selecting a maximum walk, wait and trasfer time for legs
-* applying a spatial bounding box</p>
-<p>We further improve performance by:
-* using K-dimensional trees to organise spatial data
-* using the effiecient graph-tool library to calculate shortest distances
-* parallelising the shortest distances calculation, and vectorising data transformation tasks
-* saving files to a compressed parquet format</p>
+<p>To achieve high performance, the user can limit the search space by:</p>
+<ul>
+<li>
+<p>selecting a time scope and maximum travel time</p>
+</li>
+<li>
+<p>selecting a specific day</p>
+</li>
+<li>
+<p>selecting a maximum walk, wait and trasfer time for legs</p>
+</li>
+<li>
+<p>applying a spatial bounding box</p>
+</li>
+</ul>
+<p>We further improve performance by:</p>
+<ul>
+<li>
+<p>using K-dimensional trees to organise spatial data</p>
+</li>
+<li>
+<p>using the effiecient graph-tool library to calculate shortest distances</p>
+</li>
+<li>
+<p>parallelising the shortest distances calculation, and vectorising data transformation tasks</p>
+</li>
+<li>
+<p>saving files to a compressed parquet format</p>
+</li>
+</ul>
 
 
 
