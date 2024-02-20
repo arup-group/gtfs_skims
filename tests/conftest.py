@@ -7,11 +7,11 @@ def test_content(response):
     assert response.content
 ```
 """
+
 import os
 from pathlib import Path
 
 import pytest
-
 from gtfs_skims.utils import Config, ConnectorsData, GTFSData
 
 TEST_DATA_DIR = os.path.join(Path(__file__).parent, "test_data")

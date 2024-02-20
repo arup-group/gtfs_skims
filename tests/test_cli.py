@@ -1,9 +1,9 @@
 """Tests for `gtfs_skims` CLI."""
+
 import os
 from pathlib import Path
 
 from click.testing import CliRunner
-
 from gtfs_skims import cli
 
 TEST_DATA_DIR = os.path.join(Path(__file__).parent, "test_data")

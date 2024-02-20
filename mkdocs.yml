@@ -57,6 +57,7 @@ plugins:
             signature_crossrefs: true
             show_root_toc_entry: false
             show_signature_annotations: false
+          paths: [src]
           import:
             - https://docs.python.org/3/objects.inv
             - https://pandas.pydata.org/docs/objects.inv
@@ -64,7 +65,7 @@ plugins:
   - search
 
 watch:
-  - gtfs_skims
+  - src/gtfs_skims
 
 extra_css:
   - static/extras.css

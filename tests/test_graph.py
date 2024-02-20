@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 import pytest
 from graph_tool import Graph
-
 from gtfs_skims import graph
 
 

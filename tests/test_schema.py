@@ -4,7 +4,6 @@ from pathlib import Path
 import importlib_resources
 import jsonschema
 import yaml
-
 from gtfs_skims import config as schema_dir
 
 TEST_DATA_DIR = os.path.join(Path(__file__).parent, "test_data")
