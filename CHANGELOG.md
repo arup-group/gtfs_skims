@@ -19,11 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- documentation updates.
 
 - Render math in documentation [#3].
 - Remove CI badges from showing in documentation index page (they do not render in non-public repositories).
 
 ### Added
+- yaml schema file.
 
 - Links to external objects in documented Python API.
 - **internal** PyPI upload option.

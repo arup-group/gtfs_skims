@@ -15,7 +15,6 @@ As a `gtfs_skims` user, it is easiest to install using the [mamba](https://mamba
 1. Activate the gtfs_skims mamba environment: `mamba activate gtfs_skims`
 1. Install the gtfs_skims package into the environment, ignoring dependencies (we have dealt with those when creating the mamba environment): `pip install --no-deps .`
 
-
 All together:
 
 --8<-- "README.md:docs-install-user"

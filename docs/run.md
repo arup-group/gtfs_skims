@@ -2,7 +2,7 @@
 
 To run argo simply type this command on the command line:
 ```
-argo run <CONFIG_PATH>
+gtfs_skims run <CONFIG_PATH>
 ```
 , where <CONFIG_PATH> is the path to the config yaml file.
 
@@ -35,9 +35,11 @@ steps:
   - graph
 ```
 
+More information about the config can be found in the schema definition [here](https://github.com/arup-group/gtfs_skims/blob/main/gtfs_skims/config/schema.yaml).
+
 To run the example provided by the repo, use:
 ```
-argo run ./tests/test_data/config_demo.yaml
+gtfs_skims run ./tests/test_data/config_demo.yaml
 ```
 
 The time matrices will be saved in the `output_path` directory defined in the config file, in the `skims.parquet.gzip` file. An easy way to read the file is with pandas:
