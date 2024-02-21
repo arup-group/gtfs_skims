@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/arup-group/cookiecutter-pypackage",
-  "commit": "f14fd0faf5ae5587fc4e4778a04620b0bdae08a1",
+  "commit": "a48b67a51baf68fb5158d3620fe9bd05900f54ba",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -16,7 +16,6 @@
       "upload_pypi_package": "n",
       "upload_conda_package": "n",
       "conda_channel": "city-modelling-lab",
-      "version": "0.1.0",
       "command_line_interface": "y",
       "create_docker_file": "y",
       "create_author_file": "n",

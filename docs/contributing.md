@@ -92,6 +92,13 @@ memray flamegraph [my_path]/[my_prefix]-tests-test_100_memory_profiling.py-test_
 
 For more information on using memray, refer to their [documentation](https://bloomberg.github.io/memray/index.html).
 
+## Updating the project when the template updates
+
+This project has been built with [cruft](https://cruft.github.io/cruft/) based on the [Arup Cookiecutter template](https://github.com/arup-group/cookiecutter-pypackage).
+When changes are made to the base template, they can be merged into this project by running `cruft update` from the  `gtfs_skims` mamba environment.
+
+You may be prompted to do this when you open a Pull Request, if our automated checks identify that the template is newer than that used in the project.
+
 ## Submitting changes
 
 --8<-- "CONTRIBUTING.md:docs"
