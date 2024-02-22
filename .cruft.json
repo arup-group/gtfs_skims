@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/arup-group/cookiecutter-pypackage",
-  "commit": "641cc1cd08b540e5dad4f8f3b294e81a0e62440e",
+  "commit": "071e1fadde5a9c4cb45da7bb1801cbe1925c8e0a",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -13,10 +13,9 @@
       "package_name": "gtfs_skims",
       "module_name": "gtfs_skims",
       "project_short_description": "A fast library for fast generalised cost skimming of GTFS files",
-      "upload_pypi_package": "y",
-      "upload_conda_package": "y",
+      "upload_pypi_package": "n",
+      "upload_conda_package": "n",
       "conda_channel": "city-modelling-lab",
-      "version": "0.1.0",
       "command_line_interface": "y",
       "create_docker_file": "y",
       "create_author_file": "n",

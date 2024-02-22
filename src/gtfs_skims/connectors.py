@@ -288,8 +288,9 @@ def get_access_connectors(data: GTFSData, config: Config, origins: pd.DataFrame)
     Args:
         data (GTFSData): GTFS data object.
         config (Config): Config object.
-        destinations (pd.DataFrame): Origin coordinates dataframe.
-        Must include 'x' and 'y' columns, providing the cartesian coordinates of the trip start points.
+        origins (pd.DataFrame):
+            Origin coordinates dataframe.
+            Must include 'x' and 'y' columns, providing the cartesian coordinates of the trip start points.
 
     Returns:
         np.ndarray: [origin id, destination id, walk time, wait time]
@@ -334,8 +335,9 @@ def get_egress_connectors(data: GTFSData, config: Config, destinations: pd.DataF
     Args:
         data (GTFSData): GTFS data object.
         config (Config): Config object.
-        destinations (pd.DataFrame): Destination coordinates dataframe.
-        Must include 'x' and 'y' columns, providing the cartesian coordinates of the trip ends.
+        destinations (pd.DataFrame):
+            Destination coordinates dataframe.
+            Must include 'x' and 'y' columns, providing the cartesian coordinates of the trip ends.
 
     Returns:
         np.ndarray: [origin id, destination id, walk time, wait time]

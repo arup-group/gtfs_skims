@@ -4,14 +4,14 @@
 
 # Argo (gtfs_skims)
 
-[![Daily CI Build](https://github.com/arup-group/gtfs_skims/actions/workflows/daily-scheduled-ci.yml/badge.svg)](https://github.com/arup-group/gtfs_skims/actions/workflows/daily-scheduled-ci.yml)
-[![Documentation](https://github.com/arup-group/gtfs_skims/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://arup-group.github.io/gtfs_skims)
-
 Argo is a library aimed at the fast calculation of generalised time matrices from GTFS files.
 By applying appropriate simplifications on the GTFS dataset, the library is able to calculate such matrices at scale.
 For example, it was possible to calculate an MSOA-to-MSOA matrix for England and Wales in ~1 hour (with a relatively large machine).
 
 <!--- --8<-- [end:docs] -->
+
+[![Daily CI Build](https://github.com/arup-group/gtfs_skims/actions/workflows/daily-scheduled-ci.yml/badge.svg)](https://github.com/arup-group/gtfs_skims/actions/workflows/daily-scheduled-ci.yml)
+[![Documentation](https://github.com/arup-group/gtfs_skims/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://arup-group.github.io/gtfs_skims)
 
 ## Documentation
 
@@ -24,14 +24,13 @@ To install gtfs_skims, we recommend using the [mamba](https://mamba.readthedocs.
 ### As a user
 <!--- --8<-- [start:docs-install-user] -->
 
-
 ``` shell
 
 git clone git@github.com:arup-group/gtfs_skims.git
 cd gtfs_skims
 mamba create -n gtfs_skims -c conda-forge --file requirements/base.txt
 mamba activate gtfs_skims
-pip install --no-deps -e .
+pip install --no-deps .
 
 ```
 <!--- --8<-- [end:docs-install-user] -->
@@ -74,7 +73,6 @@ mike serve
 ```
 
 Then you can view the documentation in a browser at http://localhost:8000/.
-
 
 ## Credits
 

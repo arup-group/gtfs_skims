@@ -8,7 +8,9 @@ Some of the resources to look at if you're interested in contributing:
 * Look at the [contributing guide in our documentation](https://arup-group.github.io/gtfs_skims/contributing)
 
 ## Licensing
+
 By contributing to gtfs_skims, i.e. through opening a pull request, you represent that your contributions are your own original work and that you have the right to license them, and you agree that your contributions are licensed under the MIT license.
+
 ## Reporting bugs and requesting features
 
 You can open an issue on GitHub to report bugs or request new gtfs_skims features.
@@ -86,17 +88,15 @@ When adding docstrings, we request you use the [Google docstring style](https://
 
 ### Create release
 
-- [ ] Bump the version number in `gtfs_skims/__init__.py`
-- [ ] Update the [changelog][changelog] with final version number of the form `vX.Y.Z`, release date, and github `compare` link (at the bottom of the page).
+- [ ] Bump the version number in `src/gtfs_skims/__init__.py`
+- [ ] Update the [changelog][changelog] with final version number of the form `vX.Y.Z`, release date, and [github `compare` link](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/viewing-and-comparing-commits/comparing-commits) (at the bottom of the page).
 - [ ] Commit with message `Release vX.Y.Z`, then add a `vX.Y.Z` tag.
-- [ ] Create a release pull request to verify that the conda package builds successfully.
 - [ ] Once the PR is approved and merged, create a release through the GitHub web interface, using the same tag, titling it `Release vX.Y.Z` and include all the changelog elements that are *not* flagged as **internal**.
 
 ### Post-release
 
 - [ ] Update the changelog, adding a new `[Unreleased]` heading.
-- [ ] Update `gtfs_skims/__init__.py` to the next version appended with `.dev0`, in preparation for the next main commit.
-
+- [ ] Update `src/gtfs_skims/__init__.py` to the next version appended with `.dev0`, in preparation for the next main commit.
 
 <!--- --8<-- [end:docs] -->
 

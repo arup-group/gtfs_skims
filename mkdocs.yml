@@ -13,6 +13,9 @@ theme:
   custom_dir: docs/overrides
   features:
     - navigation.indexes
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
 repo_url: https://github.com/arup-group/gtfs_skims/
 site_dir: .docs
 markdown_extensions:
@@ -29,6 +32,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.superfences
   - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.tasklist:
       clickable_checkbox: true
   - toc:
@@ -42,6 +47,7 @@ markdown_extensions:
 hooks:
   - docs/static/hooks.py
 plugins:
+  - search
   - autorefs
   - mkdocstrings:
       default_handler: python
@@ -54,16 +60,17 @@ plugins:
               - "!^_"
             merge_init_into_class: true
             show_if_no_docstring: true
-            show_signature_annotations: true
             signature_crossrefs: true
             show_root_toc_entry: false
             show_signature_annotations: false
+          paths: [src]
           import:
             - https://docs.python.org/3/objects.inv
-  - search
+            - https://pandas.pydata.org/docs/objects.inv
+            - https://numpy.org/doc/stable/objects.inv
 
 watch:
-  - gtfs_skims
+  - src/gtfs_skims
 
 extra_css:
   - static/extras.css

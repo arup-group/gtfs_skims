@@ -19,7 +19,7 @@ filterwarnings = [
 
 [tool.coverage.run]
 branch = true
-source = ["gtfs_skims/"]
+source = ["src/"]
 
 [tool.coverage.report]
 fail_under = 89
@@ -32,10 +32,12 @@ output = "reports/coverage/coverage.xml"
 
 [tool.black]
 line-length = 100
-skip_magic_trailing_comma = true
+skip-magic-trailing-comma = true
 
 [tool.ruff]
 line-length = 100
+
+[tool.ruff.lint]
 select = ["E", "F", "I", "Q"]
 
 ignore = [
@@ -49,22 +51,19 @@ exclude = [".*", "__pypackages__", "build", "dist", "venv", "reports/"]
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-[tool.ruff.pydocstyle]
-convention = "google"
+pydocstyle = {convention = "google"}
 
-[tool.ruff.mccabe]
 # Unlike Flake8, default to a complexity level of 10.
-max-complexity = 10
+mccabe = {max-complexity = 10}
 
 # Ignore `E402` (import violations) and `F401` (unused imports) in all `__init__.py` files
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["E402", "F401"]
+per-file-ignores = {"__init__.py" = ["E402", "F401"]}
 
-[tool.ruff.flake8-quotes]
-docstring-quotes = "double"
+flake8-quotes = {docstring-quotes = "double"}
 
 [tool.setuptools.packages.find]
 include = ["gtfs_skims*"]
+where = ["src"]
 
 [tool.setuptools.package-data]
 # Add file globs from the source code directory if they include non-py files that should be packaged
