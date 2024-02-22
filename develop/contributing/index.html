@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.10">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
       
       
 
@@ -404,6 +404,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#updating-the-project-when-the-template-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating the project when the template updates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#submitting-changes" class="md-nav__link">
     <span class="md-ellipsis">
       Submitting changes
@@ -531,10 +540,8 @@
     
     
     
-    
     <li class="md-nav__item md-nav__item--nested">
       
-        
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
@@ -603,10 +610,8 @@
     
     
     
-    
     <li class="md-nav__item md-nav__item--nested">
       
-        
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
@@ -849,6 +854,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#updating-the-project-when-the-template-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating the project when the template updates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#submitting-changes" class="md-nav__link">
     <span class="md-ellipsis">
       Submitting changes
@@ -1022,6 +1036,10 @@ You will then find the HTML report at <code>[my_path]/memray-flamegraph-[my_pref
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>memray<span class="w"> </span>flamegraph<span class="w"> </span><span class="o">[</span>my_path<span class="o">]</span>/<span class="o">[</span>my_prefix<span class="o">]</span>-tests-test_100_memory_profiling.py-test_mem.bin
 </span></code></pre></div>
 <p>For more information on using memray, refer to their <a href="https://bloomberg.github.io/memray/index.html">documentation</a>.</p>
+<h2 id="updating-the-project-when-the-template-updates">Updating the project when the template updates<a class="headerlink" href="#updating-the-project-when-the-template-updates" title="Permanent link">#</a></h2>
+<p>This project has been built with <a href="https://cruft.github.io/cruft/">cruft</a> based on the <a href="https://github.com/arup-group/cookiecutter-pypackage">Arup Cookiecutter template</a>.
+When changes are made to the base template, they can be merged into this project by running <code>cruft update</code> from the  <code>gtfs_skims</code> mamba environment.</p>
+<p>You may be prompted to do this when you open a Pull Request, if our automated checks identify that the template is newer than that used in the project.</p>
 <h2 id="submitting-changes">Submitting changes<a class="headerlink" href="#submitting-changes" title="Permanent link">#</a></h2>
 <p>To contribute changes:</p>
 <ol>
@@ -1069,16 +1087,15 @@ When adding docstrings, we request you use the <a href="https://google.github.io
 </ul>
 <h3 id="create-release">Create release<a class="headerlink" href="#create-release" title="Permanent link">#</a></h3>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Bump the version number in <code>gtfs_skims/__init__.py</code></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Update the <a class="autorefs autorefs-internal" href="../CHANGELOG/#changelog">changelog</a> with final version number of the form <code>vX.Y.Z</code>, release date, and github <code>compare</code> link (at the bottom of the page).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Bump the version number in <code>src/gtfs_skims/__init__.py</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Update the <a class="autorefs autorefs-internal" href="../CHANGELOG/#changelog">changelog</a> with final version number of the form <code>vX.Y.Z</code>, release date, and <a href="https://docs.github.com/en/pull-requests/committing-changes-to-your-project/viewing-and-comparing-commits/comparing-commits">github <code>compare</code> link</a> (at the bottom of the page).</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Commit with message <code>Release vX.Y.Z</code>, then add a <code>vX.Y.Z</code> tag.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Create a release pull request to verify that the conda package builds successfully.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Once the PR is approved and merged, create a release through the GitHub web interface, using the same tag, titling it <code>Release vX.Y.Z</code> and include all the changelog elements that are <em>not</em> flagged as <strong>internal</strong>.</li>
 </ul>
 <h3 id="post-release">Post-release<a class="headerlink" href="#post-release" title="Permanent link">#</a></h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Update the changelog, adding a new <code>[Unreleased]</code> heading.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Update <code>gtfs_skims/__init__.py</code> to the next version appended with <code>.dev0</code>, in preparation for the next main commit.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Update <code>src/gtfs_skims/__init__.py</code> to the next version appended with <code>.dev0</code>, in preparation for the next main commit.</li>
 </ul>
 
 
@@ -1099,6 +1116,12 @@ When adding docstrings, we request you use the <a href="https://google.github.io
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -1126,10 +1149,10 @@ When adding docstrings, we request you use the <a href="https://google.github.io
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes"], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.top", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
       
         <script src="../static/extras.js"></script>
       
