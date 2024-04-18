@@ -19,7 +19,15 @@ def filter_day(data: GTFSData, date: int) -> None:
         & (data.calendar[weekday] == 1)
     ]
 
-    data.trips = data.trips[data.trips["service_id"].isin(set(data.calendar["service_id"]))]
+    data.calendar_dates = data.calendar_dates[
+        data.calendar_dates["date"] == date
+    ]
+
+    service_ids = set(data.calendar["service_id"])
+    service_ids |= set(data.calendar_dates[data.calendar_dates["exception_type"]==1]["service_id"])
+    service_ids -= set(data.calendar_dates[data.calendar_dates["exception_type"]==2]["service_id"])
+
+    data.trips = data.trips[data.trips["service_id"].isin(service_ids)]
 
     data.routes = data.routes[data.routes["route_id"].isin(set(data.trips["route_id"]))]
 
