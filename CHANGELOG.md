@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Render math in documentation [#3].
 - Remove CI badges from showing in documentation index page (they do not render in non-public repositories).
+- Included "calendar_dates.txt" file in day filtering [#9].
 
 ### Added
 - yaml schema file.

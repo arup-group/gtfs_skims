@@ -1,5 +1,7 @@
 import os
 
+import pandas as pd
+
 from gtfs_skims import preprocessing
 
 
@@ -8,6 +10,21 @@ def test_filter_date(gtfs_data):
     preprocessing.filter_day(gtfs_data, 20180507)
     assert list(gtfs_data.calendar.service_id) == [14]
     assert set(gtfs_data.trips["service_id"]) == set([14])
+
+def test_filter_calendar_dates(gtfs_data):
+    gtfs_data.calendar_dates = pd.DataFrame([
+        {"service_id": 900001, "date": 20180507, "exception_type": 1}, # add service
+        {"service_id": 14, "date": 20180507, "exception_type": 2}, # remove service
+    ])
+    gtfs_data.trips = pd.concat([
+        gtfs_data.trips,
+        pd.DataFrame([
+            {"route_id": 900001, "service_id": 900001, "trip_id": 900001}
+        ])
+    ], ignore_index=True)
+    preprocessing.filter_day(gtfs_data, 20180507)
+    assert 900001 in list(gtfs_data.trips["service_id"])
+    assert 14 not in list(gtfs_data.trips["service_id"])
 
 
 def test_filter_time(gtfs_data):

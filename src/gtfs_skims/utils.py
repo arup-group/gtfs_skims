@@ -218,6 +218,7 @@ class Data(ABC):
 @dataclass
 class GTFSData(Data):
     calendar: pd.DataFrame
+    calendar_dates: pd.DataFrame
     routes: pd.DataFrame
     stops: pd.DataFrame
     stop_times: pd.DataFrame
